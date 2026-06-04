@@ -444,312 +444,36 @@ this.value="";
 );
 
 </script>
-
-) || [
-
-{
-id:1001,
-name:"أحمد محمد",
-present:false
-},
-
-{
-id:1002,
-name:"سارة علي",
-present:false
-}
-
-];
-
-function saveData(){
-
-localStorage.setItem(
-"children",
-JSON.stringify(children)
-);
-
-}
-
-function renderTable(data = children){
-
-let html = "";
-
-data.forEach(child=>{
-
-html += `
-<tr>
-
-<td>${child.id}</td>
-
-<td>${child.name}</td>
-
-<td>
-<span class="${
-child.present
-? 'present'
-: 'absent'
-}">
-${child.present ? 'حاضر' : 'غائب'}
-</span>
-</td>
-
-<td>
-<input
-type="checkbox"
-class="checkbox"
-${child.present ? 'checked' : ''}
-onchange="toggleAttendance(${child.id})">
-</td>
-
-<td>
-<button
-class="delete"
-onclick="deleteChild(${child.id})">
-حذف
-</button>
-</td>
-
-</tr>
-`;
-
-});
-
-document.getElementById(
-"tableBody"
-).innerHTML = html;
-
-updateStats();
-
-}
-
-function addChild(){
-
-let name =
-document.getElementById(
-"childName"
-).value.trim();
-
-let id =
-document.getElementById(
-"childId"
-).value.trim();
-
-if(!name || !id){
-
-alert("أدخل البيانات");
-
-return;
-}
-
-if(children.find(c=>c.id==id)){
-
-alert("الرقم موجود");
-
-return;
-}
-
-children.push({
-
-id:Number(id),
-name:name,
-present:false
-
-});
-
-saveData();
-
-document.getElementById(
-"childName"
-).value = "";
-
-document.getElementById(
-"childId"
-).value = "";
-
-renderTable();
-
-}
-
-function deleteChild(id){
-
-if(confirm("هل تريد الحذف؟")){
-
-children =
-children.filter(
-c=>c.id!==id
-);
-
-saveData();
-
-renderTable();
-
-}
-
-}
-
-function searchChild(){
-
-let value =
-document.getElementById(
-"searchInput"
-).value;
-
-if(value===""){
-
-renderTable();
-
-return;
-}
-
-let result =
-children.filter(c=>
-c.id.toString()
-.includes(value)
-);
-
-renderTable(result);
-
-}
-
-function toggleAttendance(id){
-
-let child =
-children.find(
-c=>c.id===id
-);
-
-child.present =
-!child.present;
-
-saveData();
-
-renderTable();
-
-}
-
-function updateStats(){
-
-let present =
-children.filter(
-c=>c.present
-).length;
-
-let absent =
-children.length - present;
-
-document.getElementById(
-"presentCount"
-).innerText = present;
-
-document.getElementById(
-"absentCount"
-).innerText = absent;
-
-document.getElementById(
-"totalCount"
-).innerText = children.length;
-
-}
-
-function resetAttendance(){
-
-if(confirm(
-"إعادة تعيين الحضور؟"
-)){
-
-children.forEach(c=>{
-
-c.present = false;
-
-});
-
-saveData();
-
-renderTable();
-
-}
-
-}
-
-function exportCSV(){
-
-let csv =
-"رقم الطفل,الاسم,الحالة\n";
-
-children.forEach(c=>{
-
-csv +=
-c.id + "," +
-c.name + "," +
-(c.present ?
-"حاضر" :
-"غائب") +
-"\n";
-
-});
-
-let blob =
-new Blob(
-[csv],
-{
-type:'text/csv'
-}
-);
-
-let link =
-document.createElement("a");
-
-link.href =
-URL.createObjectURL(blob);
-
-link.download =
-"attendance.csv";
-
-link.click();
-
-}
-
 document
 .getElementById("qrInput")
 .addEventListener(
 "change",
-function(){
+async function(){
 
 let qr =
 this.value.trim();
 
-let child =
+const child =
 children.find(
-c=>c.id == qr
+c=>String(c.childId)===qr
 );
 
 if(child){
 
-child.present = true;
-
-saveData();
-
-renderTable();
-
-alert(
-"تم تسجيل حضور: "
-+ child.name
-);
-
-}else{
-
-alert(
-"الطفل غير موجود"
+await updateDoc(
+doc(db,"children",child.docId),
+{
+present:true
+}
 );
 
 }
 
-this.value = "";
-
+this.value="";
 }
 );
 
-renderTable();
+renderTable(children);
 
 </script>
 
