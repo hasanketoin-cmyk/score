@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -215,10 +214,238 @@ th{
 </div>
 
 </div>
+<script type="module">
 
-<script>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 
-let children = [
+import {
+getFirestore,
+collection,
+addDoc,
+deleteDoc,
+doc,
+onSnapshot,
+updateDoc,
+getDocs
+}
+from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyA-aV5qGj27Vj0e8dtrXkz9Ckt5Tp-reyY",
+authDomain: "score-summer-camp.firebaseapp.com",
+projectId: "score-summer-camp",
+storageBucket: "score-summer-camp.firebasestorage.app",
+messagingSenderId: "836117896870",
+appId: "1:836117896870:web:730a652b3a8ab015105e67"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const childrenCollection =
+collection(db,"children");
+
+let children = [];
+
+window.addChild = async function(){
+
+const name =
+document.getElementById("childName").value.trim();
+
+const id =
+document.getElementById("childId").value.trim();
+
+if(!name || !id){
+alert("أدخل البيانات");
+return;
+}
+
+await addDoc(childrenCollection,{
+childId:Number(id),
+name:name,
+present:false
+});
+
+document.getElementById("childName").value="";
+document.getElementById("childId").value="";
+}
+
+window.deleteChild = async function(docId){
+
+if(!confirm("حذف الطفل؟")) return;
+
+await deleteDoc(
+doc(db,"children",docId)
+);
+
+}
+
+window.toggleAttendance =
+async function(docId){
+
+const child =
+children.find(
+c=>c.docId===docId
+);
+
+await updateDoc(
+doc(db,"children",docId),
+{
+present:!child.present
+}
+);
+
+}
+
+window.searchChild = function(){
+
+const value =
+document.getElementById("searchInput")
+.value;
+
+if(value===""){
+renderTable(children);
+return;
+}
+
+renderTable(
+children.filter(
+c=>String(c.childId)
+.includes(value)
+)
+);
+
+}
+
+function renderTable(data){
+
+let html = "";
+
+data.forEach(child=>{
+
+html += `
+<tr>
+
+<td>${child.childId}</td>
+
+<td>${child.name}</td>
+
+<td>
+<span class="${
+child.present
+? 'present'
+: 'absent'
+}">
+${child.present ? 'حاضر' : 'غائب'}
+</span>
+</td>
+
+<td>
+<input
+type="checkbox"
+class="checkbox"
+${child.present ? 'checked' : ''}
+onchange="toggleAttendance('${child.docId}')">
+</td>
+
+<td>
+<button
+class="delete"
+onclick="deleteChild('${child.docId}')">
+حذف
+</button>
+</td>
+
+</tr>
+`;
+
+});
+
+document.getElementById(
+"tableBody"
+).innerHTML = html;
+
+updateStats();
+
+}
+
+function updateStats(){
+
+let present =
+children.filter(
+c=>c.present
+).length;
+
+let absent =
+children.length - present;
+
+document.getElementById(
+"presentCount"
+).innerText = present;
+
+document.getElementById(
+"absentCount"
+).innerText = absent;
+
+document.getElementById(
+"totalCount"
+).innerText = children.length;
+
+}
+
+onSnapshot(
+childrenCollection,
+(snapshot)=>{
+
+children = [];
+
+snapshot.forEach(docu=>{
+
+children.push({
+
+docId:docu.id,
+...docu.data()
+
+});
+
+});
+
+renderTable(children);
+
+}
+);
+
+document
+.getElementById("qrInput")
+.addEventListener(
+"change",
+async function(){
+
+let qr =
+this.value.trim();
+
+const child =
+children.find(
+c=>String(c.childId)===qr
+);
+
+if(child){
+
+await updateDoc(
+doc(db,"children",child.docId),
+{
+present:true
+}
+);
+
+}
+
+this.value="";
+
+}
+);
+
+</script>
 
     {
         id:1001,
