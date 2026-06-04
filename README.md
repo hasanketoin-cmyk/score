@@ -880,59 +880,8 @@ this.value="";
 
 }
 
-);
-
-
-
-</script>
-
-document
-
-.getElementById("qrInput")
-
-.addEventListener(
-
-"change",
-
-async function(){
-
-
-
-let qr =
-
-this.value.trim();
-
-
-
-const child =
-
-children.find(
-
-c=>String(c.childId)===qr
-
-);
-
-
-
-if(child){
-
-
-
-await updateDoc(
-
-doc(db,"children",child.docId),
-
-{
-
-present:true
-
-}
-
-);
-
-
-
-}window.exportCSV = function(){
+onSnapshot(
+childrenCollection,window.exportCSV = function(){
 
 let csv = "رقم الطفل,الاسم,الحالة\n";
 
@@ -953,37 +902,45 @@ type:"text/csv;charset=utf-8;"
 }
 );
 
-const link =
-document.createElement("a");
+const link = document.createElement("a");
 
-link.href =
-URL.createObjectURL(blob);
+link.href = URL.createObjectURL(blob);
 
-link.download =
-"attendance.csv";
-
-document.body.appendChild(link);
+link.download = "attendance.csv";
 
 link.click();
 
-document.body.removeChild(link);
+};document
+.getElementById("qrInput")
+.addEventListener(
+"change",
+async function(){
 
-};
+let qr =
+this.value.trim();
 
+const child =
+children.find(
+c=>String(c.childId)===qr
+);
 
+if(child){
+
+await updateDoc(
+doc(db,"children",child.docId),
+{
+present:true
+}
+);
+
+}
 
 this.value="";
 
 }
-
 );
-
-
-
-renderTable(children);
-
-
 
 </script>
 
-
+</body>
+</html>
