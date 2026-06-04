@@ -932,7 +932,43 @@ present:true
 
 
 
+}window.exportCSV = function(){
+
+let csv = "رقم الطفل,الاسم,الحالة\n";
+
+children.forEach(child => {
+
+csv +=
+child.childId + "," +
+child.name + "," +
+(child.present ? "حاضر" : "غائب") +
+"\n";
+
+});
+
+const blob = new Blob(
+["\uFEFF" + csv],
+{
+type:"text/csv;charset=utf-8;"
 }
+);
+
+const link =
+document.createElement("a");
+
+link.href =
+URL.createObjectURL(blob);
+
+link.download =
+"attendance.csv";
+
+document.body.appendChild(link);
+
+link.click();
+
+document.body.removeChild(link);
+
+};
 
 
 
@@ -951,7 +987,3 @@ renderTable(children);
 </script>
 
 
-
-</body>
-
-</html>
