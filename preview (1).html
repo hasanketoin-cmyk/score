@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -131,7 +129,7 @@ margin-bottom:15px;
 <div class="container">
 
 <div class="header">
-<h1>📋 نظام حضور الأطفال</h1>
+<h1>📋 نظام حضور لطلاب النادي الصيفي</h1>
 </div>
 
 <div class="card">
@@ -248,52 +246,6 @@ let children = [];
 window.addChild = async function(){
 
 const name =
-document.getElementById("childName").value.trim();
-
-const id =
-document.getElementById("childId").value.trim();
-
-if(!name || !id){
-alert("أدخل البيانات");
-return;
-}
-
-await addDoc(childrenCollection,{
-childId:Number(id),
-name:name,
-present:false
-});
-
-document.getElementById("childName").value="";
-document.getElementById("childId").value="";
-}
-
-window.deleteChild = async function(docId){
-
-if(!confirm("حذف الطفل؟")) return;
-
-await deleteDoc(
-doc(db,"children",docId)
-);
-
-}
-
-window.toggleAttendance =
-async function(docId){
-
-const child =
-children.find(
-c=>c.docId===docId
-);
-
-await updateDoc(
-doc(db,"children",docId),
-{
-present:!child.present
-}
-);
-
-}
 
 window.searchChild = function(){
 
