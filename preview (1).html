@@ -396,38 +396,5 @@ this.value="";
 );
 
 </script>
-document
-.getElementById("qrInput")
-.addEventListener(
-"change",
-async function(){
-
-let qr =
-this.value.trim();
-
-const child =
-children.find(
-c=>String(c.childId)===qr
-);
-
-if(child){
-
-await updateDoc(
-doc(db,"children",child.docId),
-{
-present:true
-}
-);
-
-}
-
-this.value="";
-}
-);
-
-renderTable(children);
-
-</script>
-
-</body>
+  
 </html>
