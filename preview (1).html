@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام حضور طلاب النادي الصيفي</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Tahoma,sans-serif;
+}
+
+body{
+background:#f3f4f6;
+padding:20px;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+}
+
+.header{
+background:#1f2937;
+color:#fff;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+.card{
+background:#fff;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+
+.form-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+input{
+padding:10px;
+border:1px solid #ddd;
+border-radius:8px;
+}
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+color:white;
+}
+
+.add{background:#22c55e;}
+.search{background:#3b82f6;}
+.delete{background:#ef4444;}
+.reset{background:#f59e0b;}
+.export{background:#8b5cf6;}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #ddd;
+text-align:center;
+}
+
+th{
+background:#f8fafc;
+}
+
+.present{
+background:#22c55e;
+color:white;
+padding:5px 10px;
+border-radius:20px;
+display:inline-block;
+min-width:80px;
+}
+
+.absent{
+background:#ef4444;
+color:white;
+padding:5px 10px;
+border-radius:20px;
+display:inline-block;
+min-width:80px;
+}
+
+.stats{
+display:flex;
+gap:15px;
+margin-top:20px;
+flex-wrap:wrap;
+}
+
+.stat{
+background:#f8fafc;
+padding:15px;
+border-radius:10px;
+min-width:140px;
+text-align:center;
+font-weight:bold;
+}
+
+.checkbox{
+width:20px;
+height:20px;
+}
+
+h2{
+margin-bottom:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+<h1>📋 نظام حضور الأطفال</h1>
+</div>
+
+<div class="card">
+<h2>➕ إضافة طفل</h2>
+
+<div class="form-group">
+<input type="text" id="childName" placeholder="اسم الطفل">
+<input type="number" id="childId" placeholder="رقم الطفل">
+<button class="add" onclick="addChild()">إضافة</button>
+</div>
+</div>
+
+<div class="card">
+<h2>🔍 البحث</h2>
+
+<div class="form-group">
+<input type="number" id="searchInput" placeholder="رقم الطفل">
+<button class="search" onclick="searchChild()">بحث</button>
+<button onclick="renderTable()">إظهار الكل</button>
+</div>
+</div>
+
+<div class="card">
+<h2>📷 تسجيل الحضور</h2>
+
+<input
+type="text"
+id="qrInput"
+placeholder="امسح QR أو أدخل رقم الطفل ثم Enter"
+style="width:350px;">
+</div>
+
+<div class="card">
+
+<h2>👶 الأطفال</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>رقم الطفل</th>
+<th>الاسم</th>
+<th>الحالة</th>
+<th>التفقد</th>
+<th>حذف</th>
+</tr>
+</thead>
+
+<tbody id="tableBody"></tbody>
+
+</table>
+
+<div style="margin-top:15px;">
+<button class="reset" onclick="resetAttendance()">إعادة الحضور</button>
+<button class="export" onclick="exportCSV()">تصدير Excel</button>
+</div>
+
+<div class="stats">
+
+<div class="stat">
+الحضور
+<div id="presentCount">0</div>
+</div>
+
+<div class="stat">
+الغياب
+<div id="absentCount">0</div>
+</div>
+
+<div class="stat">
+الإجمالي
+<div id="totalCount">0</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let children = JSON.parse(
+localStorage.getItem("children")
+) || [
+
+{
+id:1001,
+name:"أحمد محمد",
+present:false
+},
+
+{
+id:1002,
+name:"سارة علي",
+present:false
+}
+
+];
+
+function saveData(){
+
+localStorage.setItem(
+"children",
+JSON.stringify(children)
+);
+
+}
+
+function renderTable(data = children){
+
+let html = "";
+
+data.forEach(child=>{
+
+html += `
+<tr>
+
+<td>${child.id}</td>
+
+<td>${child.name}</td>
+
+<td>
+<span class="${
+child.present
+? 'present'
+: 'absent'
+}">
+${child.present ? 'حاضر' : 'غائب'}
+</span>
+</td>
+
+<td>
+<input
+type="checkbox"
+class="checkbox"
+${child.present ? 'checked' : ''}
+onchange="toggleAttendance(${child.id})">
+</td>
+
+<td>
+<button
+class="delete"
+onclick="deleteChild(${child.id})">
+حذف
+</button>
+</td>
+
+</tr>
+`;
+
+});
+
+document.getElementById(
+"tableBody"
+).innerHTML = html;
+
+updateStats();
+
+}
+
+function addChild(){
+
+let name =
+document.getElementById(
+"childName"
+).value.trim();
+
+let id =
+document.getElementById(
+"childId"
+).value.trim();
+
+if(!name || !id){
+
+alert("أدخل البيانات");
+
+return;
+}
+
+if(children.find(c=>c.id==id)){
+
+alert("الرقم موجود");
+
+return;
+}
+
+children.push({
+
+id:Number(id),
+name:name,
+present:false
+
+});
+
+saveData();
+
+document.getElementById(
+"childName"
+).value = "";
+
+document.getElementById(
+"childId"
+).value = "";
+
+renderTable();
+
+}
+
+function deleteChild(id){
+
+if(confirm("هل تريد الحذف؟")){
+
+children =
+children.filter(
+c=>c.id!==id
+);
+
+saveData();
+
+renderTable();
+
+}
+
+}
+
+function searchChild(){
+
+let value =
+document.getElementById(
+"searchInput"
+).value;
+
+if(value===""){
+
+renderTable();
+
+return;
+}
+
+let result =
+children.filter(c=>
+c.id.toString()
+.includes(value)
+);
+
+renderTable(result);
+
+}
+
+function toggleAttendance(id){
+
+let child =
+children.find(
+c=>c.id===id
+);
+
+child.present =
+!child.present;
+
+saveData();
+
+renderTable();
+
+}
+
+function updateStats(){
+
+let present =
+children.filter(
+c=>c.present
+).length;
+
+let absent =
+children.length - present;
+
+document.getElementById(
+"presentCount"
+).innerText = present;
+
+document.getElementById(
+"absentCount"
+).innerText = absent;
+
+document.getElementById(
+"totalCount"
+).innerText = children.length;
+
+}
+
+function resetAttendance(){
+
+if(confirm(
+"إعادة تعيين الحضور؟"
+)){
+
+children.forEach(c=>{
+
+c.present = false;
+
+});
+
+saveData();
+
+renderTable();
+
+}
+
+}
+
+function exportCSV(){
+
+let csv =
+"رقم الطفل,الاسم,الحالة\n";
+
+children.forEach(c=>{
+
+csv +=
+c.id + "," +
+c.name + "," +
+(c.present ?
+"حاضر" :
+"غائب") +
+"\n";
+
+});
+
+let blob =
+new Blob(
+[csv],
+{
+type:'text/csv'
+}
+);
+
+let link =
+document.createElement("a");
+
+link.href =
+URL.createObjectURL(blob);
+
+link.download =
+"attendance.csv";
+
+link.click();
+
+}
+
+document
+.getElementById("qrInput")
+.addEventListener(
+"change",
+function(){
+
+let qr =
+this.value.trim();
+
+let child =
+children.find(
+c=>c.id == qr
+);
+
+if(child){
+
+child.present = true;
+
+saveData();
+
+renderTable();
+
+alert(
+"تم تسجيل حضور: "
++ child.name
+);
+
+}else{
+
+alert(
+"الطفل غير موجود"
+);
+
+}
+
+this.value = "";
+
+}
+);
+
+renderTable();
+
+</script>
+
+</body>
+</html>
