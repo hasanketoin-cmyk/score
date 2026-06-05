@@ -1,3 +1,67 @@
+<div style="text-align:left;margin-bottom:10px;">
+
+<button
+id="adminBtn"
+class="search"
+onclick="toggleAdminMode()">
+
+🔒 فتح الإدارة
+
+</button>
+
+</div>
+const ADMIN_PASSWORD = "123456";
+
+let adminMode = false;
+window.toggleAdminMode = function(){
+
+if(adminMode){
+
+adminMode = false;
+
+document.getElementById(
+"adminBtn"
+).innerText =
+"🔒 فتح الإدارة";
+
+alert(
+"تم قفل الإدارة"
+);
+
+return;
+
+}
+
+const password =
+prompt(
+"أدخل كلمة مرور المدير"
+);
+
+if(
+password !== ADMIN_PASSWORD
+){
+
+alert(
+"كلمة المرور غير صحيحة"
+);
+
+return;
+
+}
+
+adminMode = true;
+
+document.getElementById(
+"adminBtn"
+).innerText =
+"🔓 الإدارة مفتوحة";
+
+alert(
+"تم فتح الإدارة"
+);
+
+};
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
