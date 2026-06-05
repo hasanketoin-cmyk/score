@@ -1020,9 +1020,53 @@ present:false
 window.exportCSV =
 function(){
 
+window.exportCSV = function(){
+
 let csv =
 "رقم الطفل,الاسم,المشرف,تاريخ البدء,الحالة\n";
 
+children.forEach(child=>{
+
+const supervisor =
+supervisors.find(
+s=>s.docId===child.supervisorId
+);
+
+csv +=
+`${child.childId},` +
+`${child.name},` +
+`${supervisor ? supervisor.name : ''},` +
+`${child.startDate || ''},` +
+`${child.present ? 'حاضر' : 'غائب'}\n`;
+
+});
+
+const BOM = "\uFEFF";
+
+const blob =
+new Blob(
+[BOM + csv],
+{
+type:"text/csv;charset=utf-8;"
+}
+);
+
+const link =
+document.createElement("a");
+
+link.href =
+URL.createObjectURL(blob);
+
+link.download =
+"attendance.csv";
+
+document.body.appendChild(link);
+
+link.click();
+
+document.body.removeChild(link);
+
+};
 children.forEach(child=>{
 
 const supervisor =
