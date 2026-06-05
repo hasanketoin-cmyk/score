@@ -131,33 +131,108 @@ margin-bottom:15px;
 <div class="header">
 <h1>📋 نظام حضور لطلاب النادي الصيفي</h1>
 </div>
-
-<div class="card">
-<h2>➕ إضافة طفل</h2>
-
-<div class="form-group">
-<input type="text" id="childName" placeholder="اسم الطفل">
-<input type="number" id="childId" placeholder="رقم الطفل">
-<button class="add" onclick="addChild()">إضافة</button>
-</div>
-</div>
-
 <div class="card">
 
-<h2>
-🔍 البحث
-</h2>
+<h2>👨‍🏫 إدارة المشرفين</h2>
 
 <div class="form-group">
 
 <input
-type="number"
-id="searchInput"
-placeholder="رقم الطفل">
+type="text"
+id="supervisorName"
+placeholder="اسم المشرف">
 
 <button
-class="search"
-onclick="searchChild()">
+class="add"
+onclick="addSupervisor()">
+
+إضافة مشرف
+
+</button>
+
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>المشرف</th>
+<th>عدد الأطفال</th>
+<th>تعديل</th>
+<th>حذف</th>
+</tr>
+</thead>
+
+<tbody id="supervisorsTable">
+
+</tbody>
+
+</table>
+
+</div>
+<div class="card">
+
+<h2>➕ إضافة طفل</h2>
+
+<div class="form-group">
+
+<input
+type="text"
+id="childName"
+placeholder="اسم الطفل">
+
+<input
+type="number"
+id="childId"
+placeholder="رقم الطفل">
+
+<select id="childSupervisor">
+
+<option value="">
+اختر المشرف
+</option>
+
+</select>
+
+<input
+type="date"
+id="startDate">
+
+<button
+class="add"
+onclick="addChild()">
+window.editSupervisor =
+async function(docId){
+
+const current =
+supervisors.find(
+s=>s.docId===docId
+);
+
+const newName =
+prompt(
+"اسم المشرف الجديد",
+current.name
+);
+
+if(
+!newName ||
+newName.trim()===""
+)
+return;
+
+await updateDoc(
+doc(
+db,
+"supervisors",
+docId
+),
+{
+name:newName.trim()
+}
+);
+
+};
 
 بحث
 
