@@ -175,10 +175,6 @@ onclick="addSupervisor()">
 
 <div class="form-group">
 
-<input
-type="text"
-id="childName"
-placeholder="اسم الطفل">
 
 <input
 type="number"
@@ -246,15 +242,17 @@ style="width:350px;">
 المشرف
 </th>
 
-<th>
+<th><th>
 تاريخ البدء
+</th>
+
+<th>
+تاريخ التفقد
 </th>
 
 <th>
 الحالة
 </th>
-
-<th>
 التفقد
 </th>
 
@@ -601,6 +599,21 @@ document
 )
 .innerHTML = html;
 
+}function getNextChildId()
+{
+
+if(children.length === 0)
+return 1;
+
+const maxId =
+Math.max(
+...children.map(
+c => Number(c.childId || 0)
+)
+);
+
+return maxId + 1;
+
 }
   window.addChild =
 async function(){
@@ -613,13 +626,6 @@ document
 .value
 .trim();
 
-const childId =
-document
-.getElementById(
-"childId"
-)
-.value
-.trim();
 
 const supervisorId =
 document
@@ -637,7 +643,6 @@ document
 
 if(
 !name ||
-!childId ||
 !supervisorId
 ){
 
@@ -653,7 +658,7 @@ await addDoc(
 childrenCollection,
 {
 name:name,
-childId:Number(childId),
+childId:getNextChildId(),
 supervisorId:supervisorId,
 startDate:startDate,
 present:false
@@ -666,11 +671,6 @@ document
 )
 .value="";
 
-document
-.getElementById(
-"childId"
-)
-.value="";
 
 };
 
@@ -707,11 +707,11 @@ await updateDoc(
 doc(
 db,
 "children",
-docId
+child.docId
 ),
 {
-present:
-!child.present
+present:true,
+attendanceDate:new Date().toLocaleDateString('en-CA')
 }
 );
 
@@ -788,6 +788,10 @@ supervisor.name
 
 <td>
 ${child.startDate || "-"}
+</td>
+
+<td>
+${child.attendanceDate || "-"}
 </td>
 
 <td>
@@ -1023,8 +1027,7 @@ function(){
 window.exportCSV = function(){
 
 let csv =
-"رقم الطفل,الاسم,المشرف,تاريخ البدء,الحالة\n";
-
+"رقم الطفل,الاسم,المشرف,تاريخ البدء,تاريخ التفقد,الحالة\n";
 children.forEach(child=>{
 
 const supervisor =
