@@ -169,8 +169,7 @@ onclick="addSupervisor()">
 
 </table>
 
-</div>
-<div class="card">
+</div><div class="card">
 
 <h2>➕ إضافة طفل</h2>
 
@@ -201,57 +200,14 @@ id="startDate">
 <button
 class="add"
 onclick="addChild()">
-window.editSupervisor =
-async function(docId){
 
-const current =
-supervisors.find(
-s=>s.docId===docId
-);
-
-const newName =
-prompt(
-"اسم المشرف الجديد",
-current.name
-);
-
-if(
-!newName ||
-newName.trim()===""
-)
-return;
-
-await updateDoc(
-doc(
-db,
-"supervisors",
-docId
-),
-{
-name:newName.trim()
-}
-);
-
-};
-
-بحث
-
-</button>
-
-<button
-onclick="renderTable(children)">
-
-إظهار الكل
+إضافة طفل
 
 </button>
 
 </div>
 
 </div>
-
-<div class="card">
-
-<h2>
 📷 تسجيل الحضور
 </h2>
 
@@ -564,6 +520,58 @@ document
 
 function renderSupervisors(){
 
+let html="";
+
+supervisors.forEach(s=>{
+
+const count =
+children.filter(
+c=>c.supervisorId===s.docId
+).length;
+
+html += `
+
+<tr>
+
+<td>${s.name}</td>
+
+<td>${count}</td>
+
+<td>
+
+<button
+class="search"
+onclick="editSupervisor('${s.docId}')">
+
+تعديل
+
+</button>
+
+</td>
+
+<td>
+
+<button
+class="delete"
+onclick="deleteSupervisor('${s.docId}')">
+
+حذف
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+document.getElementById(
+"supervisorsTable"
+).innerHTML = html;
+
+}
 let html = "";
 
 supervisors.forEach(s=>{
