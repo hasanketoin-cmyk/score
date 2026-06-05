@@ -9,58 +9,6 @@ onclick="toggleAdminMode()">
 
 </button>
 
-</div>
-const ADMIN_PASSWORD = "123456";
-
-let adminMode = false;
-window.toggleAdminMode = function(){
-
-if(adminMode){
-
-adminMode = false;
-
-document.getElementById(
-"adminBtn"
-).innerText =
-"🔒 فتح الإدارة";
-
-alert(
-"تم قفل الإدارة"
-);
-
-return;
-
-}
-
-const password =
-prompt(
-"أدخل كلمة مرور المدير"
-);
-
-if(
-password !== ADMIN_PASSWORD
-){
-
-alert(
-"كلمة المرور غير صحيحة"
-);
-
-return;
-
-}
-
-adminMode = true;
-
-document.getElementById(
-"adminBtn"
-).innerText =
-"🔓 الإدارة مفتوحة";
-
-alert(
-"تم فتح الإدارة"
-);
-
-};
 
 <head>
 <meta charset="UTF-8">
@@ -222,7 +170,6 @@ onclick="addSupervisor()">
 <tr>
 <th>المشرف</th>
 <th>عدد الأطفال</th>
-<th>تعديل</th>
 <th>حذف</th>
 </tr>
 </thead>
@@ -239,11 +186,12 @@ onclick="addSupervisor()">
 
 <div class="form-group">
 
+<div class="form-group">
 
 <input
-type="number"
-id="childId"
-placeholder="رقم الطفل">
+type="text"
+id="childName"
+placeholder="اسم الطفل">
 
 <select id="childSupervisor">
 
