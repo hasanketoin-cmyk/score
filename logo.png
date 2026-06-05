@@ -1,0 +1,32 @@
+<div class="header">
+
+<img
+src="logo.png"
+alt="SCORE Summer Camp"
+class="logo">
+
+<h1>
+SCORE SUMMER CAMP
+</h1>
+
+<p>
+نظام إدارة حضور الأطفال والمشرفين
+</p>
+
+</div>
+.header{
+background:#0f172a;
+color:white;
+padding:25px;
+border-radius:15px;
+text-align:center;
+margin-bottom:20px;
+}
+
+.logo{
+width:140px;
+height:auto;
+display:block;
+margin:auto;
+margin-bottom:15px;
+}
