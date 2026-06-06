@@ -682,7 +682,7 @@ async function(){
 const password =
 prompt("أدخل رمز الإدارة");
 
-if(password !== "123456"){
+if(password !== "199412"){
 
 alert("رمز الإدارة غير صحيح");
 
@@ -690,13 +690,6 @@ return;
 
 }
 
-const name =
-document
-.getElementById(
-"childName"
-)
-.value
-.trim();
 const name =
 document
 .getElementById(
