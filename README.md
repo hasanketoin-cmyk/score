@@ -1,16 +1,19 @@
+<div class="container">
 <div class="card" id="loginCard">
 
 <h2>🔐 تسجيل دخول المدير</h2>
 
+<div class="form-group">
+
 <input
 type="email"
 id="email"
-placeholder="ketoin.h@gmail.com">
+placeholder="ket">
 
 <input
 type="password"
 id="password"
-placeholder="H123456789k">
+placeholder="كلمة المرور">
 
 <button
 class="add"
@@ -21,6 +24,9 @@ onclick="login()">
 </button>
 
 </div>
+
+</div>
+  
 <div style="text-align:left;margin-bottom:10px;">
 
 <button
@@ -397,7 +403,13 @@ updateDoc,
 getDocs
 }
 from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-
+import {
+getAuth,
+signInWithEmailAndPassword,
+signOut,
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 const firebaseConfig = {
 
 apiKey: "AIzaSyA-aV5qGj27Vj0e8dtrXkz9Ckt5Tp-reyY",
@@ -424,6 +436,9 @@ initializeApp(firebaseConfig);
 
 const db =
 getFirestore(app);
+
+const auth =
+getAuth(app);
 
 const childrenCollection =
 collection(
