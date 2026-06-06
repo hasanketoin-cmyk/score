@@ -1,3 +1,26 @@
+<div class="card" id="loginCard">
+
+<h2>🔐 تسجيل دخول المدير</h2>
+
+<input
+type="email"
+id="email"
+placeholder="البريد الإلكتروني">
+
+<input
+type="password"
+id="password"
+placeholder="كلمة المرور">
+
+<button
+class="add"
+onclick="login()">
+
+تسجيل الدخول
+
+</button>
+
+</div>
 <div style="text-align:left;margin-bottom:10px;">
 
 <button
