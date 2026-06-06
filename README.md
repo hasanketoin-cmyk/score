@@ -475,7 +475,20 @@ createDefaultGroups();
 
 window.addSupervisor =
 async function(){
-if(!requireAdmin()) return;
+const password =
+prompt("أدخل رمز الإدارة");
+
+if(password !== "123456"){
+alert("رمز خاطئ");
+return;
+}
+
+if(
+!confirm(
+"حذف الطفل؟"
+)
+)
+return;
 const name =
 document
 .getElementById(
@@ -511,7 +524,20 @@ document
 
 window.deleteSupervisor =
 async function(docId){
+const password =
+prompt("أدخل رمز الإدارة");
 
+if(password !== "123456"){
+alert("رمز خاطئ");
+return;
+}
+
+if(
+!confirm(
+"حذف الطفل؟"
+)
+)
+return;
 if(
 !confirm(
 "حذف المشرف؟"
