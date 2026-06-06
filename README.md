@@ -415,16 +415,19 @@ let children = [];
 let supervisors = [];
 const ADMIN_PASSWORD = "199412";
 
+let adminUnlocked = false;
+
 function requireAdmin(){
+
+if(adminUnlocked)
+return true;
 
 const password =
 prompt(
 "أدخل رمز الإدارة"
 );
 
-if(
-password !== ADMIN_PASSWORD
-){
+if(password !== ADMIN_PASSWORD){
 
 alert(
 "رمز الإدارة غير صحيح"
@@ -434,16 +437,15 @@ return false;
 
 }
 
+adminUnlocked = true;
+
+alert(
+"تم فتح الإدارة"
+);
+
 return true;
 
 }
-async function createDefaultGroups(){
-
-const snapshot =
-await getDocs(
-supervisorsCollection
-);
-
 if(snapshot.empty){
 
 const groups = [
@@ -475,13 +477,7 @@ createDefaultGroups();
 
 window.addSupervisor =
 async function(){
-const password =
-prompt("أدخل رمز الإدارة");
 
-if(password !== "199412"){
-alert("رمز خاطئ");
-return;
-}
 
 if(
 !confirm(
@@ -524,13 +520,6 @@ document
 
 window.deleteSupervisor =
 async function(docId){
-const password =
-prompt("أدخل رمز الإدارة");
-
-if(password !== "199412"){
-alert("رمز خاطئ");
-return;
-}
 
 if(
 !confirm(
@@ -679,16 +668,6 @@ return maxId + 1;
  window.addChild =
 async function(){
 
-const password =
-prompt("أدخل رمز الإدارة");
-
-if(password !== "199412"){
-
-alert("رمز الإدارة غير صحيح");
-
-return;
-
-}
 
 const name =
 document
@@ -748,14 +727,6 @@ document
 
 window.deleteChild =
 async function(docId){
-
-const password =
-prompt("أدخل رمز الإدارة");
-
-if(password !== "199412"){
-alert("رمز خاطئ");
-return;
-}
 
 if(
 !confirm(
