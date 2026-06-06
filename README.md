@@ -413,7 +413,30 @@ db,
 
 let children = [];
 let supervisors = [];
+const ADMIN_PASSWORD = "123456";
 
+function requireAdmin(){
+
+const password =
+prompt(
+"أدخل رمز الإدارة"
+);
+
+if(
+password !== ADMIN_PASSWORD
+){
+
+alert(
+"رمز الإدارة غير صحيح"
+);
+
+return false;
+
+}
+
+return true;
+
+}
 async function createDefaultGroups(){
 
 const snapshot =
