@@ -9,6 +9,7 @@ onclick="toggleAdminMode()">
 
 </button>
 
+</div>
 
 <head>
 <meta charset="UTF-8">
@@ -254,7 +255,7 @@ style="width:350px;">
 المشرف
 </th>
 
-<th><th>
+<th>
 تاريخ البدء
 </th>
 
@@ -265,7 +266,11 @@ style="width:350px;">
 <th>
 الحالة
 </th>
+
+<th>
 التفقد
+</th>
+
 </th>
 
 <th>
@@ -433,10 +438,9 @@ alert("تم قفل الإدارة");
 return;
 
 }
-
-const password =
-prompt(
+const password = prompt(
 "أدخل كلمة مرور المدير"
+);
 );
 
 if(password !== ADMIN_PASSWORD){
@@ -498,9 +502,42 @@ name:group
 }
 
 createDefaultGroups();
-
+if(!requireAdmin()) return;
 window.addSupervisor =
-async function(if(!requireAdmin()) return;){
+async function(){
+
+if(!requireAdmin()) return;
+
+const name =
+document
+.getElementById(
+"supervisorName"
+)
+.value
+.trim();
+
+if(!name){
+
+alert("أدخل اسم المشرف");
+
+return;
+
+}
+
+await addDoc(
+supervisorsCollection,
+{
+name:name
+}
+);
+
+document
+.getElementById(
+"supervisorName"
+)
+.value="";
+
+};
 
 const name =
 document
@@ -1085,7 +1122,6 @@ present:false
 window.exportCSV =
 function(){
 
-window.exportCSV = function(){
 
 let csv =
 "رقم الطفل,الاسم,المشرف,تاريخ البدء,تاريخ التفقد,الحالة\n";
