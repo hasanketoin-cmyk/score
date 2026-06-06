@@ -719,16 +719,21 @@ await updateDoc(
 doc(
 db,
 "children",
-child.docId
+docId
 ),
 {
-present:true,
-attendanceDate:new Date().toLocaleDateString('en-CA')
+present: !child.present,
+
+attendanceDate:
+!child.present
+?
+new Date().toLocaleDateString('en-CA')
+:
+""
 }
 );
 
 };
-
 window.searchChild =
 function(){
 
