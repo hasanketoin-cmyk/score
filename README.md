@@ -254,7 +254,7 @@ style="width:350px;">
 المشرف
 </th>
 
-<th>
+<th><th>
 تاريخ البدء
 </th>
 
@@ -719,17 +719,11 @@ await updateDoc(
 doc(
 db,
 "children",
-docId
+child.docId
 ),
 {
-present: !child.present,
-
-attendanceDate:
-!child.present
-?
-new Date().toLocaleDateString('en-CA')
-:
-""
+present:true,
+attendanceDate:new Date().toLocaleDateString('en-CA')
 }
 );
 
@@ -1031,8 +1025,7 @@ db,
 child.docId
 ),
 {
-present:false,
-attendanceDate:""
+present:false
 }
 );
 
@@ -1043,6 +1036,7 @@ attendanceDate:""
 window.exportCSV =
 function(){
 
+window.exportCSV = function(){
 
 let csv =
 "رقم الطفل,الاسم,المشرف,تاريخ البدء,تاريخ التفقد,الحالة\n";
