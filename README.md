@@ -5,12 +5,12 @@
 <input
 type="email"
 id="email"
-placeholder="البريد الإلكتروني">
+placeholder="ketoin.h@gmail.com">
 
 <input
 type="password"
 id="password"
-placeholder="كلمة المرور">
+placeholder="H123456789k">
 
 <button
 class="add"
