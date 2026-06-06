@@ -7,6 +7,9 @@ onclick="toggleAdminMode()">
 
 🔒 فتح الإدارة
 
+</button>
+
+</div>
 
 <head>
 <meta charset="UTF-8">
@@ -270,9 +273,7 @@ style="width:350px;">
 
 </th>
 
-<th>
 حذف
-</th>
 
 </tr>
 
@@ -501,8 +502,6 @@ createDefaultGroups();
 if(!requireAdmin()) return;
 window.addSupervisor =
 async function(){
-
-if(!requireAdmin()) return;
 
 const name =
 document
