@@ -413,7 +413,67 @@ db,
 
 let children = [];
 let supervisors = [];
+const ADMIN_PASSWORD = "123456";
 
+let adminMode = false;
+
+window.toggleAdminMode = function(){
+
+if(adminMode){
+
+adminMode = false;
+
+document.getElementById(
+"adminBtn"
+).innerText =
+"🔒 فتح الإدارة";
+
+alert("تم قفل الإدارة");
+
+return;
+
+}
+
+const password =
+prompt(
+"أدخل كلمة مرور المدير"
+);
+
+if(password !== ADMIN_PASSWORD){
+
+alert(
+"كلمة المرور غير صحيحة"
+);
+
+return;
+
+}
+
+adminMode = true;
+
+document.getElementById(
+"adminBtn"
+).innerText =
+"🔓 الإدارة مفتوحة";
+
+alert(
+"تم فتح الإدارة"
+);
+
+};
+
+function requireAdmin(){
+
+if(adminMode)
+return true;
+
+alert(
+"الإدارة مقفلة"
+);
+
+return false;
+
+}
 async function createDefaultGroups(){
 
 const snapshot =
@@ -440,7 +500,7 @@ name:group
 createDefaultGroups();
 
 window.addSupervisor =
-async function(){
+async function(if(!requireAdmin()) return;){
 
 const name =
 document
