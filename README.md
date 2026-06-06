@@ -689,6 +689,21 @@ document
 window.deleteChild =
 async function(docId){
 
+const password =
+prompt("أدخل رمز الإدارة");
+
+if(password !== "123456"){
+alert("رمز خاطئ");
+return;
+}
+
+if(
+!confirm(
+"حذف الطفل؟"
+)
+)
+return;
+
 if(
 !confirm(
 "حذف الطفل؟"
