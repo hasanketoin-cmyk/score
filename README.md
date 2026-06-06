@@ -676,9 +676,27 @@ c => Number(c.childId || 0)
 return maxId + 1;
 
 }
-  window.addChild =
+ window.addChild =
 async function(){
 
+const password =
+prompt("أدخل رمز الإدارة");
+
+if(password !== "123456"){
+
+alert("رمز الإدارة غير صحيح");
+
+return;
+
+}
+
+const name =
+document
+.getElementById(
+"childName"
+)
+.value
+.trim();
 const name =
 document
 .getElementById(
