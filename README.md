@@ -1,3 +1,4 @@
+</button>
 <div style="text-align:left;margin-bottom:10px;">
 
 <button
@@ -6,8 +7,6 @@ class="search"
 onclick="toggleAdminMode()">
 
 🔒 فتح الإدارة
-
-</button>
 
 </div>
 
@@ -441,7 +440,6 @@ return;
 const password = prompt(
 "أدخل كلمة مرور المدير"
 );
-);
 
 if(password !== ADMIN_PASSWORD){
 
@@ -537,38 +535,6 @@ document
 )
 .value="";
 
-};
-
-const name =
-document
-.getElementById(
-"supervisorName"
-)
-.value
-.trim();
-
-if(!name){
-
-alert(
-"أدخل اسم المشرف"
-);
-
-return;
-
-}
-
-await addDoc(
-supervisorsCollection,
-{
-name:name
-}
-);
-
-document
-.getElementById(
-"supervisorName"
-)
-.value="";
 
 };
 
