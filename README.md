@@ -1,3 +1,15 @@
+<div style="text-align:left;margin-bottom:10px;">
+
+<button
+id="adminBtn"
+class="search"
+onclick="toggleAdminMode()">
+
+🔒 فتح الإدارة
+
+</button>
+
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -131,78 +143,198 @@ margin-bottom:15px;
 <div class="header">
 <h1>📋 نظام حضور لطلاب النادي الصيفي</h1>
 </div>
-
 <div class="card">
-<h2>➕ إضافة طفل</h2>
+
+<h2>👨‍🏫 إدارة المشرفين</h2>
 
 <div class="form-group">
-<input type="text" id="childName" placeholder="اسم الطفل">
-<input type="number" id="childId" placeholder="رقم الطفل">
-<button class="add" onclick="addChild()">إضافة</button>
-</div>
-</div>
-
-<div class="card">
-<h2>🔍 البحث</h2>
-
-<div class="form-group">
-<input type="number" id="searchInput" placeholder="رقم الطفل">
-<button class="search" onclick="searchChild()">بحث</button>
-<button onclick="renderTable()">إظهار الكل</button>
-</div>
-</div>
-
-<div class="card">
-<h2>📷 تسجيل الحضور</h2>
 
 <input
 type="text"
-id="qrInput"
-placeholder="امسح QR أو أدخل رقم الطفل ثم Enter"
-style="width:350px;">
+id="supervisorName"
+placeholder="اسم المشرف">
+
+<button
+class="add"
+onclick="addSupervisor()">
+
+إضافة مشرف
+
+</button>
+
 </div>
-
-<div class="card">
-
-<h2>👶 الأطفال</h2>
 
 <table>
 
 <thead>
 <tr>
-<th>رقم الطفل</th>
-<th>الاسم</th>
-<th>الحالة</th>
-<th>التفقد</th>
+<th>المشرف</th>
+<th>عدد الأطفال</th>
 <th>حذف</th>
 </tr>
 </thead>
 
-<tbody id="tableBody"></tbody>
+<tbody id="supervisorsTable">
+
+</tbody>
+
+</table>
+
+</div><div class="card">
+
+<h2>➕ إضافة طفل</h2>
+
+<div class="form-group">
+
+<div class="form-group">
+
+<input
+type="text"
+id="childName"
+placeholder="اسم الطفل">
+
+<select id="childSupervisor">
+
+<option value="">
+اختر المشرف
+</option>
+
+</select>
+
+<input
+type="date"
+id="startDate">
+
+<button
+class="add"
+onclick="addChild()">
+
+إضافة طفل
+
+</button>
+
+</div>
+<div class="card">
+
+<h2>
+📷 تسجيل الحضور
+</h2>
+
+<input
+type="text"
+id="qrInput"
+placeholder="امسح QR أو أدخل رقم الطفل"
+style="width:350px;">
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>
+👶 الأطفال
+</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+رقم الطفل
+</th>
+
+<th>
+اسم الطفل
+</th>
+
+<th>
+المشرف
+</th>
+
+<th><th>
+تاريخ البدء
+</th>
+
+<th>
+تاريخ التفقد
+</th>
+
+<th>
+الحالة
+</th>
+التفقد
+</th>
+
+<th>
+حذف
+</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tableBody">
+
+</tbody>
 
 </table>
 
 <div style="margin-top:15px;">
-<button class="reset" onclick="resetAttendance()">إعادة الحضور</button>
-<button class="export" onclick="exportCSV()">تصدير Excel</button>
+
+<button
+class="reset"
+onclick="resetAttendance()">
+
+إعادة الحضور
+
+</button>
+
+<button
+class="export"
+onclick="exportCSV()">
+
+تصدير Excel
+
+</button>
+
 </div>
 
 <div class="stats">
 
 <div class="stat">
+
 الحضور
-<div id="presentCount">0</div>
+
+<div id="presentCount">
+
+0
+
+</div>
+
 </div>
 
 <div class="stat">
+
 الغياب
-<div id="absentCount">0</div>
+
+<div id="absentCount">
+
+0
+
+</div>
+
 </div>
 
 <div class="stat">
+
 الإجمالي
-<div id="totalCount">0</div>
-</div>
+
+<div id="totalCount">
+
+0
 
 </div>
 
@@ -210,9 +342,23 @@ style="width:350px;">
 
 </div>
 
+</div>
+
+<div class="card">
+
+<h2>
+📋 الأطفال حسب المشرف
+</h2>
+
+<div id="groupsContainer">
+
+</div>
+
+</div>
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 
 import {
 getFirestore,
@@ -227,91 +373,397 @@ getDocs
 from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
 const firebaseConfig = {
+
 apiKey: "AIzaSyA-aV5qGj27Vj0e8dtrXkz9Ckt5Tp-reyY",
-authDomain: "score-summer-camp.firebaseapp.com",
-projectId: "score-summer-camp",
-storageBucket: "score-summer-camp.firebasestorage.app",
-messagingSenderId: "836117896870",
-appId: "1:836117896870:web:730a652b3a8ab015105e67"
+
+authDomain:
+"score-summer-camp.firebaseapp.com",
+
+projectId:
+"score-summer-camp",
+
+storageBucket:
+"score-summer-camp.firebasestorage.app",
+
+messagingSenderId:
+"836117896870",
+
+appId:
+"1:836117896870:web:730a652b3a8ab015105e67"
+
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
 
 const childrenCollection =
-collection(db,"children");
+collection(
+db,
+"children"
+);
+
+const supervisorsCollection =
+collection(
+db,
+"supervisors"
+);
 
 let children = [];
+let supervisors = [];
 
-window.addChild = async function(){
+async function createDefaultGroups(){
 
-const name =
-document.getElementById("childName").value.trim();
+const snapshot =
+await getDocs(
+supervisorsCollection
+);
 
-const id =
-document.getElementById("childId").value.trim();
+if(snapshot.empty){
 
-if(!name || !id){
-alert("أدخل البيانات");
-return;
+const groups = [
+
+"المجموعة الأولى",
+"المجموعة الثانية",
+"المجموعة الثالثة",
+"المجموعة الرابعة",
+"المجموعة الخامسة"
+
+];
+
+for(const group of groups){
+
+await addDoc(
+supervisorsCollection,
+{
+name:group
 }
-
-await addDoc(childrenCollection,{
-childId:Number(id),
-name:name,
-present:false
-});
-
-document.getElementById("childName").value="";
-document.getElementById("childId").value="";
-}
-
-window.deleteChild = async function(docId){
-
-if(!confirm("حذف الطفل؟")) return;
-
-await deleteDoc(
-doc(db,"children",docId)
 );
 
 }
+
+}
+
+}
+
+createDefaultGroups();
+
+window.addSupervisor =
+async function(){
+
+const name =
+document
+.getElementById(
+"supervisorName"
+)
+.value
+.trim();
+
+if(!name){
+
+alert(
+"أدخل اسم المشرف"
+);
+
+return;
+
+}
+
+await addDoc(
+supervisorsCollection,
+{
+name:name
+}
+);
+
+document
+.getElementById(
+"supervisorName"
+)
+.value="";
+
+};
+
+window.deleteSupervisor =
+async function(docId){
+
+if(
+!confirm(
+"حذف المشرف؟"
+)
+)
+return;
+
+await deleteDoc(
+doc(
+db,
+"supervisors",
+docId
+)
+);
+
+};window.editSupervisor =
+async function(docId){
+
+const current =
+supervisors.find(
+s=>s.docId===docId
+);
+
+const newName =
+prompt(
+"اسم المشرف الجديد",
+current.name
+);
+
+if(
+!newName ||
+newName.trim()===""
+)
+return;
+
+await updateDoc(
+doc(
+db,
+"supervisors",
+docId
+),
+{
+name:newName.trim()
+}
+);
+
+};
+
+function fillSupervisorSelect(){
+
+let html =
+'<option value="">اختر المشرف</option>';
+
+supervisors.forEach(s=>{
+
+html += `
+
+<option value="${s.docId}">
+${s.name}
+</option>
+
+`;
+
+});
+
+document
+.getElementById(
+"childSupervisor"
+)
+.innerHTML = html;
+
+}
+
+function renderSupervisors(){
+
+
+let html = "";
+
+supervisors.forEach(s=>{
+
+const count =
+children.filter(
+c =>
+c.supervisorId === s.docId
+).length;
+
+html += `
+
+<tr>
+
+<td>
+${s.name}
+</td>
+
+<td>
+${count}
+</td>
+
+<td>
+
+<button
+class="delete"
+onclick="deleteSupervisor('${s.docId}')">
+
+حذف
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+document
+.getElementById(
+"supervisorsTable"
+)
+.innerHTML = html;
+
+}function getNextChildId()
+{
+
+if(children.length === 0)
+return 1;
+
+const maxId =
+Math.max(
+...children.map(
+c => Number(c.childId || 0)
+)
+);
+
+return maxId + 1;
+
+}
+  window.addChild =
+async function(){
+
+const name =
+document
+.getElementById(
+"childName"
+)
+.value
+.trim();
+
+
+const supervisorId =
+document
+.getElementById(
+"childSupervisor"
+)
+.value;
+
+const startDate =
+document
+.getElementById(
+"startDate"
+)
+.value;
+
+if(
+!name ||
+!supervisorId
+){
+
+alert(
+"أكمل البيانات"
+);
+
+return;
+
+}
+
+await addDoc(
+childrenCollection,
+{
+name:name,
+childId:getNextChildId(),
+supervisorId:supervisorId,
+startDate:startDate,
+present:false
+}
+);
+
+document
+.getElementById(
+"childName"
+)
+.value="";
+
+
+};
+
+window.deleteChild =
+async function(docId){
+
+if(
+!confirm(
+"حذف الطفل؟"
+)
+)
+return;
+
+await deleteDoc(
+doc(
+db,
+"children",
+docId
+)
+);
+
+};
 
 window.toggleAttendance =
 async function(docId){
 
 const child =
 children.find(
-c=>c.docId===docId
+c =>
+c.docId === docId
 );
 
 await updateDoc(
-doc(db,"children",docId),
+doc(
+db,
+"children",
+child.docId
+),
 {
-present:!child.present
+present:true,
+attendanceDate:new Date().toLocaleDateString('en-CA')
 }
 );
 
-}
+};
 
-window.searchChild = function(){
+window.searchChild =
+function(){
 
 const value =
-document.getElementById("searchInput")
+document
+.getElementById(
+"searchInput"
+)
 .value;
 
 if(value===""){
-renderTable(children);
+
+renderTable(
+children
+);
+
 return;
+
 }
 
 renderTable(
+
 children.filter(
-c=>String(c.childId)
-.includes(value)
+c =>
+String(
+c.childId
 )
+.includes(
+value
+)
+)
+
 );
 
-}
+};
 
 function renderTable(data){
 
@@ -319,75 +771,387 @@ let html = "";
 
 data.forEach(child=>{
 
+const supervisor =
+supervisors.find(
+s =>
+s.docId ===
+child.supervisorId
+);
+
 html += `
+
 <tr>
 
-<td>${child.childId}</td>
-
-<td>${child.name}</td>
-
 <td>
-<span class="${
-child.present
-? 'present'
-: 'absent'
-}">
-${child.present ? 'حاضر' : 'غائب'}
-</span>
+${child.childId}
 </td>
 
 <td>
+${child.name}
+</td>
+
+<td>
+${supervisor
+?
+supervisor.name
+:
+"-"}
+</td>
+
+<td>
+${child.startDate || "-"}
+</td>
+
+<td>
+${child.attendanceDate || "-"}
+</td>
+
+<td>
+
+<span
+class="${
+child.present
+?
+'present'
+:
+'absent'
+}">
+
+${
+child.present
+?
+'حاضر'
+:
+'غائب'
+}
+
+</span>
+
+</td>
+
+<td>
+
 <input
 type="checkbox"
 class="checkbox"
 ${child.present ? 'checked' : ''}
 onchange="toggleAttendance('${child.docId}')">
+
 </td>
 
 <td>
+
 <button
 class="delete"
 onclick="deleteChild('${child.docId}')">
+
 حذف
+
 </button>
+
 </td>
 
 </tr>
+
 `;
 
 });
 
-document.getElementById(
+document
+.getElementById(
 "tableBody"
-).innerHTML = html;
+)
+.innerHTML = html;
 
 updateStats();
 
+renderGroups();
+
+renderSupervisors();
+
 }
+  function updateStats(){
 
-function updateStats(){
-
-let present =
+const present =
 children.filter(
 c=>c.present
 ).length;
 
-let absent =
+const absent =
 children.length - present;
 
-document.getElementById(
+document
+.getElementById(
 "presentCount"
-).innerText = present;
+)
+.innerText = present;
 
-document.getElementById(
+document
+.getElementById(
 "absentCount"
-).innerText = absent;
+)
+.innerText = absent;
 
-document.getElementById(
+document
+.getElementById(
 "totalCount"
-).innerText = children.length;
+)
+.innerText = children.length;
 
 }
+
+function renderGroups(){
+
+let html = "";
+
+supervisors.forEach(s=>{
+
+const kids =
+children.filter(
+c =>
+c.supervisorId === s.docId
+);
+
+html += `
+
+<div class="group-card">
+
+<h3>
+
+👨‍🏫 ${s.name}
+
+(${kids.length})
+
+</h3>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>رقم الطفل</th>
+
+<th>الاسم</th>
+
+<th>تاريخ البدء</th>
+
+<th>الحالة</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+`;
+
+kids.forEach(child=>{
+
+html += `
+
+<tr>
+
+<td>
+${child.childId}
+</td>
+
+<td>
+${child.name}
+</td>
+
+<td>
+${child.startDate || "-"}
+</td>
+
+<td>
+
+<span
+class="${
+child.present
+?
+'present'
+:
+'absent'
+}">
+
+${
+child.present
+?
+'حاضر'
+:
+'غائب'
+}
+
+</span>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+html += `
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+});
+
+document
+.getElementById(
+"groupsContainer"
+)
+.innerHTML = html;
+
+}
+
+window.resetAttendance =
+async function(){
+
+for(const child of children){
+
+await updateDoc(
+doc(
+db,
+"children",
+child.docId
+),
+{
+present:false
+}
+);
+
+}
+
+};
+
+window.exportCSV =
+function(){
+
+window.exportCSV = function(){
+
+let csv =
+"رقم الطفل,الاسم,المشرف,تاريخ البدء,تاريخ التفقد,الحالة\n";
+children.forEach(child=>{
+
+const supervisor =
+supervisors.find(
+s=>s.docId===child.supervisorId
+);
+
+csv +=
+`${child.childId},` +
+`${child.name},` +
+`${supervisor ? supervisor.name : ''},` +
+`${child.startDate || ''},` +
+`${child.present ? 'حاضر' : 'غائب'}\n`;
+
+});
+
+const BOM = "\uFEFF";
+
+const blob =
+new Blob(
+[BOM + csv],
+{
+type:"text/csv;charset=utf-8;"
+}
+);
+
+const link =
+document.createElement("a");
+
+link.href =
+URL.createObjectURL(blob);
+
+link.download =
+"attendance.csv";
+
+document.body.appendChild(link);
+
+link.click();
+
+document.body.removeChild(link);
+
+};
+children.forEach(child=>{
+
+const supervisor =
+supervisors.find(
+s =>
+s.docId ===
+child.supervisorId
+);
+
+csv +=
+
+`${child.childId},` +
+`${child.name},` +
+`${supervisor ? supervisor.name : ''},` +
+`${child.startDate || ''},` +
+`${child.present ? 'حاضر' : 'غائب'}\n`;
+
+});
+
+const blob =
+new Blob(
+[csv],
+{
+type:
+'text/csv;charset=utf-8;'
+}
+);
+
+const link =
+document.createElement(
+'a'
+);
+
+link.href =
+URL.createObjectURL(
+blob
+);
+
+link.download =
+'attendance.csv';
+
+link.click();
+
+};
+
+onSnapshot(
+supervisorsCollection,
+(snapshot)=>{
+
+supervisors = [];
+
+snapshot.forEach(docu=>{
+
+supervisors.push({
+
+docId:docu.id,
+...docu.data()
+
+});
+
+});
+
+fillSupervisorSelect();
+
+renderSupervisors();
+
+renderTable(children);
+
+}
+);
 
 onSnapshot(
 childrenCollection,
@@ -406,29 +1170,40 @@ docId:docu.id,
 
 });
 
-renderTable(children);
+renderTable(
+children
+);
 
 }
 );
 
 document
-.getElementById("qrInput")
+.getElementById(
+"qrInput"
+)
 .addEventListener(
 "change",
 async function(){
 
-let qr =
+const qr =
 this.value.trim();
 
 const child =
 children.find(
-c=>String(c.childId)===qr
+c =>
+String(
+c.childId
+) === qr
 );
 
 if(child){
 
 await updateDoc(
-doc(db,"children",child.docId),
+doc(
+db,
+"children",
+child.docId
+),
 {
 present:true
 }
@@ -440,40 +1215,9 @@ this.value="";
 
 }
 );
-
-</script>
-document
-.getElementById("qrInput")
-.addEventListener(
-"change",
-async function(){
-
-let qr =
-this.value.trim();
-
-const child =
-children.find(
-c=>String(c.childId)===qr
-);
-
-if(child){
-
-await updateDoc(
-doc(db,"children",child.docId),
-{
-present:true
-}
-);
-
-}
-
-this.value="";
-}
-);
-
-renderTable(children);
 
 </script>
 
 </body>
+
 </html>
