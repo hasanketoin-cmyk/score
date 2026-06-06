@@ -131,49 +131,81 @@ margin-bottom:15px;
 <div class="header">
 <h1>📋 نظام حضور لطلاب النادي الصيفي</h1>
 </div>
-
-<div class="card">
-<h2>➕ إضافة طفل</h2>
-
-<div class="form-group">
-<input type="text" id="childName" placeholder="اسم الطفل">
-<input type="number" id="childId" placeholder="رقم الطفل">
-<button class="add" onclick="addChild()">إضافة</button>
-</div>
-</div>
-
 <div class="card">
 
-<h2>
-🔍 البحث
-</h2>
+<h2>👨‍🏫 إدارة المشرفين</h2>
 
 <div class="form-group">
 
 <input
+type="text"
+id="supervisorName"
+placeholder="اسم المشرف">
+
+<button
+class="add"
+onclick="addSupervisor()">
+
+إضافة مشرف
+
+</button>
+
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>المشرف</th>
+<th>عدد الأطفال</th>
+<th>تعديل</th>
+<th>حذف</th>
+</tr>
+</thead>
+
+<tbody id="supervisorsTable">
+
+</tbody>
+
+</table>
+
+</div><div class="card">
+
+<h2>➕ إضافة طفل</h2>
+
+<div class="form-group">
+
+<input
+type="text"
+id="childName"
+placeholder="اسم الطفل">
+
+<input
 type="number"
-id="searchInput"
+id="childId"
 placeholder="رقم الطفل">
 
+<select id="childSupervisor">
+
+<option value="">
+اختر المشرف
+</option>
+
+</select>
+
+<input
+type="date"
+id="startDate">
+
 <button
-class="search"
-onclick="searchChild()">
+class="add"
+onclick="addChild()">
 
-بحث
-
-</button>
-
-<button
-onclick="renderTable(children)">
-
-إظهار الكل
+إضافة طفل
 
 </button>
 
 </div>
-
-</div>
-
 <div class="card">
 
 <h2>
@@ -185,6 +217,8 @@ type="text"
 id="qrInput"
 placeholder="امسح QR أو أدخل رقم الطفل"
 style="width:350px;">
+
+</div>
 
 </div>
 
@@ -212,15 +246,17 @@ style="width:350px;">
 المشرف
 </th>
 
-<th>
+<th><th>
 تاريخ البدء
+</th>
+
+<th>
+تاريخ التفقد
 </th>
 
 <th>
 الحالة
 </th>
-
-<th>
 التفقد
 </th>
 
@@ -460,6 +496,37 @@ docId
 )
 );
 
+};window.editSupervisor =
+async function(docId){
+
+const current =
+supervisors.find(
+s=>s.docId===docId
+);
+
+const newName =
+prompt(
+"اسم المشرف الجديد",
+current.name
+);
+
+if(
+!newName ||
+newName.trim()===""
+)
+return;
+
+await updateDoc(
+doc(
+db,
+"supervisors",
+docId
+),
+{
+name:newName.trim()
+}
+);
+
 };
 
 function fillSupervisorSelect(){
@@ -488,6 +555,7 @@ document
 }
 
 function renderSupervisors(){
+
 
 let html = "";
 
@@ -641,11 +709,11 @@ await updateDoc(
 doc(
 db,
 "children",
-docId
+child.docId
 ),
 {
-present:
-!child.present
+present:true,
+attendanceDate:new Date().toLocaleDateString('en-CA')
 }
 );
 
@@ -722,6 +790,10 @@ supervisor.name
 
 <td>
 ${child.startDate || "-"}
+</td>
+
+<td>
+${child.attendanceDate || "-"}
 </td>
 
 <td>
@@ -954,9 +1026,52 @@ present:false
 window.exportCSV =
 function(){
 
-let csv =
-"رقم الطفل,الاسم,المشرف,تاريخ البدء,الحالة\n";
+window.exportCSV = function(){
 
+let csv =
+"رقم الطفل,الاسم,المشرف,تاريخ البدء,تاريخ التفقد,الحالة\n";
+children.forEach(child=>{
+
+const supervisor =
+supervisors.find(
+s=>s.docId===child.supervisorId
+);
+
+csv +=
+`${child.childId},` +
+`${child.name},` +
+`${supervisor ? supervisor.name : ''},` +
+`${child.startDate || ''},` +
+`${child.present ? 'حاضر' : 'غائب'}\n`;
+
+});
+
+const BOM = "\uFEFF";
+
+const blob =
+new Blob(
+[BOM + csv],
+{
+type:"text/csv;charset=utf-8;"
+}
+);
+
+const link =
+document.createElement("a");
+
+link.href =
+URL.createObjectURL(blob);
+
+link.download =
+"attendance.csv";
+
+document.body.appendChild(link);
+
+link.click();
+
+document.body.removeChild(link);
+
+};
 children.forEach(child=>{
 
 const supervisor =
