@@ -422,17 +422,6 @@ supervisorsCollection
 );
 
 if(snapshot.empty){
-
-const groups = [
-
-"المجموعة الأولى",
-"المجموعة الثانية",
-"المجموعة الثالثة",
-"المجموعة الرابعة",
-"المجموعة الخامسة"
-
-];
-
 for(const group of groups){
 
 await addDoc(
