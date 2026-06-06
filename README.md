@@ -475,7 +475,7 @@ createDefaultGroups();
 
 window.addSupervisor =
 async function(){
-
+if(!requireAdmin()) return;
 const name =
 document
 .getElementById(
