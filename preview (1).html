@@ -1,3 +1,13 @@
+<div style="text-align:left;margin-bottom:10px;">
+
+<button
+id="adminBtn"
+class="search"
+onclick="toggleAdminMode()">
+
+🔒 فتح الإدارة
+
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -131,49 +141,77 @@ margin-bottom:15px;
 <div class="header">
 <h1>📋 نظام حضور لطلاب النادي الصيفي</h1>
 </div>
-
-<div class="card">
-<h2>➕ إضافة طفل</h2>
-
-<div class="form-group">
-<input type="text" id="childName" placeholder="اسم الطفل">
-<input type="number" id="childId" placeholder="رقم الطفل">
-<button class="add" onclick="addChild()">إضافة</button>
-</div>
-</div>
-
 <div class="card">
 
-<h2>
-🔍 البحث
-</h2>
+<h2>👨‍🏫 إدارة المشرفين</h2>
 
 <div class="form-group">
 
 <input
-type="number"
-id="searchInput"
-placeholder="رقم الطفل">
+type="text"
+id="supervisorName"
+placeholder="اسم المشرف">
 
 <button
-class="search"
-onclick="searchChild()">
+class="add"
+onclick="addSupervisor()">
 
-بحث
-
-</button>
-
-<button
-onclick="renderTable(children)">
-
-إظهار الكل
+إضافة مشرف
 
 </button>
 
 </div>
 
-</div>
+<table>
 
+<thead>
+<tr>
+<th>المشرف</th>
+<th>عدد الأطفال</th>
+<th>حذف</th>
+</tr>
+</thead>
+
+<tbody id="supervisorsTable">
+
+</tbody>
+
+</table>
+
+</div><div class="card">
+
+<h2>➕ إضافة طفل</h2>
+
+<div class="form-group">
+
+<div class="form-group">
+
+<input
+type="text"
+id="childName"
+placeholder="اسم الطفل">
+
+<select id="childSupervisor">
+
+<option value="">
+اختر المشرف
+</option>
+
+</select>
+
+<input
+type="date"
+id="startDate">
+
+<button
+class="add"
+onclick="addChild()">
+
+إضافة طفل
+
+</button>
+
+</div>
 <div class="card">
 
 <h2>
@@ -185,6 +223,8 @@ type="text"
 id="qrInput"
 placeholder="امسح QR أو أدخل رقم الطفل"
 style="width:350px;">
+
+</div>
 
 </div>
 
@@ -217,11 +257,17 @@ style="width:350px;">
 </th>
 
 <th>
+تاريخ التفقد
+</th>
+
+<th>
 الحالة
 </th>
 
 <th>
 التفقد
+</th>
+
 </th>
 
 <th>
@@ -369,7 +415,65 @@ db,
 
 let children = [];
 let supervisors = [];
+const ADMIN_PASSWORD = "123456";
 
+let adminMode = false;
+
+window.toggleAdminMode = function(){
+
+if(adminMode){
+
+adminMode = false;
+
+document.getElementById(
+"adminBtn"
+).innerText =
+"🔒 فتح الإدارة";
+
+alert("تم قفل الإدارة");
+
+return;
+
+}
+const password = prompt(
+"أدخل كلمة مرور المدير"
+);
+
+if(password !== ADMIN_PASSWORD){
+
+alert(
+"كلمة المرور غير صحيحة"
+);
+
+return;
+
+}
+
+adminMode = true;
+
+document.getElementById(
+"adminBtn"
+).innerText =
+"🔓 الإدارة مفتوحة";
+
+alert(
+"تم فتح الإدارة"
+);
+
+};
+
+function requireAdmin(){
+
+if(adminMode)
+return true;
+
+alert(
+"الإدارة مقفلة"
+);
+
+return false;
+
+}
 async function createDefaultGroups(){
 
 const snapshot =
@@ -378,17 +482,6 @@ supervisorsCollection
 );
 
 if(snapshot.empty){
-
-const groups = [
-
-"المجموعة الأولى",
-"المجموعة الثانية",
-"المجموعة الثالثة",
-"المجموعة الرابعة",
-"المجموعة الخامسة"
-
-];
-
 for(const group of groups){
 
 await addDoc(
@@ -405,9 +498,11 @@ name:group
 }
 
 createDefaultGroups();
-
+if(!requireAdmin()) return;
 window.addSupervisor =
 async function(){
+
+if(!requireAdmin()) return;
 
 const name =
 document
@@ -419,9 +514,7 @@ document
 
 if(!name){
 
-alert(
-"أدخل اسم المشرف"
-);
+alert("أدخل اسم المشرف");
 
 return;
 
@@ -439,6 +532,7 @@ document
 "supervisorName"
 )
 .value="";
+
 
 };
 
@@ -458,6 +552,37 @@ db,
 "supervisors",
 docId
 )
+);
+
+};window.editSupervisor =
+async function(docId){
+
+const current =
+supervisors.find(
+s=>s.docId===docId
+);
+
+const newName =
+prompt(
+"اسم المشرف الجديد",
+current.name
+);
+
+if(
+!newName ||
+newName.trim()===""
+)
+return;
+
+await updateDoc(
+doc(
+db,
+"supervisors",
+docId
+),
+{
+name:newName.trim()
+}
 );
 
 };
@@ -488,6 +613,7 @@ document
 }
 
 function renderSupervisors(){
+
 
 let html = "";
 
@@ -535,6 +661,21 @@ document
 )
 .innerHTML = html;
 
+}function getNextChildId()
+{
+
+if(children.length === 0)
+return 1;
+
+const maxId =
+Math.max(
+...children.map(
+c => Number(c.childId || 0)
+)
+);
+
+return maxId + 1;
+
 }
   window.addChild =
 async function(){
@@ -547,13 +688,6 @@ document
 .value
 .trim();
 
-const childId =
-document
-.getElementById(
-"childId"
-)
-.value
-.trim();
 
 const supervisorId =
 document
@@ -571,7 +705,6 @@ document
 
 if(
 !name ||
-!childId ||
 !supervisorId
 ){
 
@@ -587,7 +720,7 @@ await addDoc(
 childrenCollection,
 {
 name:name,
-childId:Number(childId),
+childId:getNextChildId(),
 supervisorId:supervisorId,
 startDate:startDate,
 present:false
@@ -600,11 +733,6 @@ document
 )
 .value="";
 
-document
-.getElementById(
-"childId"
-)
-.value="";
 
 };
 
@@ -641,11 +769,11 @@ await updateDoc(
 doc(
 db,
 "children",
-docId
+child.docId
 ),
 {
-present:
-!child.present
+present:true,
+attendanceDate:new Date().toLocaleDateString('en-CA')
 }
 );
 
@@ -722,6 +850,10 @@ supervisor.name
 
 <td>
 ${child.startDate || "-"}
+</td>
+
+<td>
+${child.attendanceDate || "-"}
 </td>
 
 <td>
@@ -954,9 +1086,51 @@ present:false
 window.exportCSV =
 function(){
 
-let csv =
-"رقم الطفل,الاسم,المشرف,تاريخ البدء,الحالة\n";
 
+let csv =
+"رقم الطفل,الاسم,المشرف,تاريخ البدء,تاريخ التفقد,الحالة\n";
+children.forEach(child=>{
+
+const supervisor =
+supervisors.find(
+s=>s.docId===child.supervisorId
+);
+
+csv +=
+`${child.childId},` +
+`${child.name},` +
+`${supervisor ? supervisor.name : ''},` +
+`${child.startDate || ''},` +
+`${child.present ? 'حاضر' : 'غائب'}\n`;
+
+});
+
+const BOM = "\uFEFF";
+
+const blob =
+new Blob(
+[BOM + csv],
+{
+type:"text/csv;charset=utf-8;"
+}
+);
+
+const link =
+document.createElement("a");
+
+link.href =
+URL.createObjectURL(blob);
+
+link.download =
+"attendance.csv";
+
+document.body.appendChild(link);
+
+link.click();
+
+document.body.removeChild(link);
+
+};
 children.forEach(child=>{
 
 const supervisor =
