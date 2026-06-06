@@ -413,7 +413,7 @@ db,
 
 let children = [];
 let supervisors = [];
-const ADMIN_PASSWORD = "123456";
+const ADMIN_PASSWORD = "199412";
 
 function requireAdmin(){
 
@@ -478,7 +478,7 @@ async function(){
 const password =
 prompt("أدخل رمز الإدارة");
 
-if(password !== "123456"){
+if(password !== "199412"){
 alert("رمز خاطئ");
 return;
 }
@@ -527,7 +527,7 @@ async function(docId){
 const password =
 prompt("أدخل رمز الإدارة");
 
-if(password !== "123456"){
+if(password !== "199412"){
 alert("رمز خاطئ");
 return;
 }
@@ -741,7 +741,7 @@ async function(docId){
 const password =
 prompt("أدخل رمز الإدارة");
 
-if(password !== "123456"){
+if(password !== "199412"){
 alert("رمز خاطئ");
 return;
 }
