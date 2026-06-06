@@ -1,32 +1,3 @@
-<div class="container">
-<div class="card" id="loginCard">
-
-<h2>🔐 تسجيل دخول المدير</h2>
-
-<div class="form-group">
-
-<input
-type="email"
-id="email"
-placeholder="ket">
-
-<input
-type="password"
-id="password"
-placeholder="كلمة المرور">
-
-<button
-class="add"
-onclick="login()">
-
-تسجيل الدخول
-
-</button>
-
-</div>
-
-</div>
-  
 <div style="text-align:left;margin-bottom:10px;">
 
 <button
@@ -38,7 +9,6 @@ onclick="toggleAdminMode()">
 
 </button>
 
-</div>
 
 <head>
 <meta charset="UTF-8">
@@ -284,7 +254,7 @@ style="width:350px;">
 المشرف
 </th>
 
-<th>
+<th><th>
 تاريخ البدء
 </th>
 
@@ -295,14 +265,12 @@ style="width:350px;">
 <th>
 الحالة
 </th>
-
-<th>
 التفقد
 </th>
 
-</th>
-
+<th>
 حذف
+</th>
 
 </tr>
 
@@ -403,13 +371,7 @@ updateDoc,
 getDocs
 }
 from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
-import {
-getAuth,
-signInWithEmailAndPassword,
-signOut,
-onAuthStateChanged
-}
-from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
 const firebaseConfig = {
 
 apiKey: "AIzaSyA-aV5qGj27Vj0e8dtrXkz9Ckt5Tp-reyY",
@@ -437,9 +399,6 @@ initializeApp(firebaseConfig);
 const db =
 getFirestore(app);
 
-const auth =
-getAuth(app);
-
 const childrenCollection =
 collection(
 db,
@@ -454,65 +413,7 @@ db,
 
 let children = [];
 let supervisors = [];
-const ADMIN_PASSWORD = "123456";
 
-let adminMode = false;
-
-window.toggleAdminMode = function(){
-
-if(adminMode){
-
-adminMode = false;
-
-document.getElementById(
-"adminBtn"
-).innerText =
-"🔒 فتح الإدارة";
-
-alert("تم قفل الإدارة");
-
-return;
-
-}
-const password = prompt(
-"أدخل كلمة مرور المدير"
-);
-
-if(password !== ADMIN_PASSWORD){
-
-alert(
-"كلمة المرور غير صحيحة"
-);
-
-return;
-
-}
-
-adminMode = true;
-
-document.getElementById(
-"adminBtn"
-).innerText =
-"🔓 الإدارة مفتوحة";
-
-alert(
-"تم فتح الإدارة"
-);
-
-};
-
-function requireAdmin(){
-
-if(adminMode)
-return true;
-
-alert(
-"الإدارة مقفلة"
-);
-
-return false;
-
-}
 async function createDefaultGroups(){
 
 const snapshot =
@@ -521,6 +422,17 @@ supervisorsCollection
 );
 
 if(snapshot.empty){
+
+const groups = [
+
+"المجموعة الأولى",
+"المجموعة الثانية",
+"المجموعة الثالثة",
+"المجموعة الرابعة",
+"المجموعة الخامسة"
+
+];
+
 for(const group of groups){
 
 await addDoc(
@@ -537,7 +449,7 @@ name:group
 }
 
 createDefaultGroups();
-if(!requireAdmin()) return;
+
 window.addSupervisor =
 async function(){
 
@@ -551,7 +463,9 @@ document
 
 if(!name){
 
-alert("أدخل اسم المشرف");
+alert(
+"أدخل اسم المشرف"
+);
 
 return;
 
@@ -569,7 +483,6 @@ document
 "supervisorName"
 )
 .value="";
-
 
 };
 
@@ -1123,6 +1036,7 @@ present:false
 window.exportCSV =
 function(){
 
+window.exportCSV = function(){
 
 let csv =
 "رقم الطفل,الاسم,المشرف,تاريخ البدء,تاريخ التفقد,الحالة\n";
