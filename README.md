@@ -1,4 +1,3 @@
-</button>
 <div style="text-align:left;margin-bottom:10px;">
 
 <button
@@ -8,7 +7,6 @@ onclick="toggleAdminMode()">
 
 🔒 فتح الإدارة
 
-</div>
 
 <head>
 <meta charset="UTF-8">
