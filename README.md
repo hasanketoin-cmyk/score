@@ -1,3 +1,15 @@
+<div style="text-align:left;margin-bottom:10px;">
+
+<button
+id="adminBtn"
+class="search"
+onclick="toggleAdminMode()">
+
+🔒 فتح الإدارة
+
+</button>
+
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -158,7 +170,6 @@ onclick="addSupervisor()">
 <tr>
 <th>المشرف</th>
 <th>عدد الأطفال</th>
-<th>تعديل</th>
 <th>حذف</th>
 </tr>
 </thead>
@@ -175,15 +186,12 @@ onclick="addSupervisor()">
 
 <div class="form-group">
 
+<div class="form-group">
+
 <input
 type="text"
 id="childName"
 placeholder="اسم الطفل">
-
-<input
-type="number"
-id="childId"
-placeholder="رقم الطفل">
 
 <select id="childSupervisor">
 
@@ -603,6 +611,21 @@ document
 )
 .innerHTML = html;
 
+}function getNextChildId()
+{
+
+if(children.length === 0)
+return 1;
+
+const maxId =
+Math.max(
+...children.map(
+c => Number(c.childId || 0)
+)
+);
+
+return maxId + 1;
+
 }
   window.addChild =
 async function(){
@@ -615,13 +638,6 @@ document
 .value
 .trim();
 
-const childId =
-document
-.getElementById(
-"childId"
-)
-.value
-.trim();
 
 const supervisorId =
 document
@@ -639,7 +655,6 @@ document
 
 if(
 !name ||
-!childId ||
 !supervisorId
 ){
 
@@ -655,7 +670,7 @@ await addDoc(
 childrenCollection,
 {
 name:name,
-childId:Number(childId),
+childId:getNextChildId(),
 supervisorId:supervisorId,
 startDate:startDate,
 present:false
@@ -668,11 +683,6 @@ document
 )
 .value="";
 
-document
-.getElementById(
-"childId"
-)
-.value="";
 
 };
 
