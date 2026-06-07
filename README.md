@@ -1025,16 +1025,18 @@ html += `
 
 });
 
-document
-.getElementById(
-"groupsContainer"
-)
-.innerHTML = html;
+document.getElementById(
+"busesTable"
+).innerHTML = tableHtml;
 
+document.getElementById(
+"busGroupsContainer"
+).innerHTML = html;
 }
 function renderBuses(){
 
 let html = "";
+let tableHtml = "";
 
 buses.forEach(bus=>{
 
@@ -1042,6 +1044,20 @@ const kids =
 children.filter(
 c => c.busId === bus.docId
 );
+
+tableHtml += `
+
+<tr>
+
+<td>${bus.name}</td>
+
+<td>${bus.supervisor}</td>
+
+<td>${kids.length}</td>
+
+</tr>
+
+`;
 
 html += `
 
