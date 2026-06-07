@@ -791,17 +791,11 @@ html += `
 
 <tr>
 
-<td>
-${child.childId}
-</td>
+<td>${child.childId}</td>
 
-<td>
-${child.name}
-</td>
+<td>${child.name}</td>
 
-<td>
-${child.startDate || "-"}
-</td>
+<td>${child.startDate || "-"}</td>
 
 <td>
 
@@ -827,11 +821,13 @@ child.present
 
 <td>
 
-<input
-type="checkbox"
-class="checkbox"
-${child.present ? 'checked' : ''}
-onchange="toggleAttendance('${child.docId}')">
+<button
+class="${child.present ? 'present' : 'absent'}"
+onclick="toggleAttendance('${child.docId}')">
+
+${child.present ? '✔ حاضر' : '✖ غائب'}
+
+</button>
 
 </td>
 
