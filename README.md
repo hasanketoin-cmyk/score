@@ -249,24 +249,14 @@ style="width:350px;">
 <thead>
 
 <tr>
-<tr>
-
 <th>رقم الطفل</th>
-
 <th>اسم الطفل</th>
-
 <th>المشرف</th>
-
 <th>تاريخ البدء</th>
-
 <th>تاريخ التفقد</th>
-
 <th>الحالة</th>
-
 <th>التفقد</th>
-
 <th>حذف</th>
-
 </tr>
 
 </th>
@@ -833,22 +823,13 @@ html += `
 
 <td>${child.startDate || "-"}</td>
 
+<td>${child.attendanceDate || "-"}</td>
 
-<span class="${
-child.present
-?
-'present'
-:
-'absent'
-}">
+<td>
 
-${
-child.present
-?
-'حاضر'
-:
-'غائب'
-}
+<span class="${child.present ? 'present' : 'absent'}">
+
+${child.present ? 'حاضر' : 'غائب'}
 
 </span>
 
@@ -881,6 +862,7 @@ onclick="deleteChild('${child.docId}')">
 </tr>
 
 `;
+  
 });
 
 document
@@ -1154,26 +1136,19 @@ attendanceDate:""
 };
 
 
-window.exportCSV =
-function(){
+window.exportCSV = function(){
 
 let csv =
-"رقم الطفل,الاسم,المشرف,تاريخ البدء,تاريخ التفقد,الحالة\n";
+"رقم الطفل,الاسم,المشرف,تاريخ البدء,الحالة\n";
 
-document.body.removeChild(link);
-
-};
 children.forEach(child=>{
 
 const supervisor =
 supervisors.find(
-s =>
-s.docId ===
-child.supervisorId
+s=>s.docId===child.supervisorId
 );
 
 csv +=
-
 `${child.childId},` +
 `${child.name},` +
 `${supervisor ? supervisor.name : ''},` +
@@ -1186,20 +1161,15 @@ const blob =
 new Blob(
 [csv],
 {
-type:
-'text/csv;charset=utf-8;'
+type:'text/csv;charset=utf-8;'
 }
 );
 
 const link =
-document.createElement(
-'a'
-);
+document.createElement('a');
 
 link.href =
-URL.createObjectURL(
-blob
-);
+URL.createObjectURL(blob);
 
 link.download =
 'attendance.csv';
@@ -1207,6 +1177,7 @@ link.download =
 link.click();
 
 };
+
 onSnapshot(
 busesCollection,
 (snapshot)=>{
