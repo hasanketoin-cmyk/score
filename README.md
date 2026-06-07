@@ -785,35 +785,31 @@ supervisors.find(
 s =>
 s.docId ===
 child.supervisorId
-);
+kids.forEach(child=>{
 
 html += `
 
 <tr>
 
-<td>${child.childId}</td>
+<td>
+${child.childId}
+</td>
 
-<td>${child.name}</td>
+<td>
+${child.name}
+</td>
 
-<td>${child.startDate || "-"}</td>
+<td>
+${child.startDate || "-"}
+</td>
 
 <td>
 
 <span class="${
-child.present
-?
-'present'
-:
-'absent'
+child.present ? 'present' : 'absent'
 }">
 
-${
-child.present
-?
-'حاضر'
-:
-'غائب'
-}
+${child.present ? 'حاضر' : 'غائب'}
 
 </span>
 
@@ -825,7 +821,7 @@ child.present
 class="${child.present ? 'present' : 'absent'}"
 onclick="toggleAttendance('${child.docId}')">
 
-${child.present ? '✔ حاضر' : '✖ غائب'}
+${child.present ? '🟢 حاضر' : '🔴 غائب'}
 
 </button>
 
@@ -846,6 +842,8 @@ onclick="deleteChild('${child.docId}')">
 </tr>
 
 `;
+
+});
 });
 
 document
