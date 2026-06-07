@@ -367,6 +367,33 @@ onclick="exportCSV()">
 </div>
 
 </div>
+
+<div class="card">
+
+<h2>🚌 خطوط الباصات</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>اسم الخط</th>
+<th>المشرف</th>
+<th>عدد الأطفال</th>
+</tr>
+</thead>
+
+<tbody id="busesTable">
+
+</tbody>
+
+</table>
+
+<div id="busGroupsContainer">
+
+</div>
+
+</div>
+
 <script type="module">
 
 import { initializeApp }
@@ -1035,7 +1062,88 @@ document
 .innerHTML = html;
 
 }
+function renderBuses(){
 
+let html = "";
+
+buses.forEach(bus=>{
+
+const kids =
+children.filter(
+c => c.busId === bus.docId
+);
+
+html += `
+
+<div class="card">
+
+<h3>
+🚌 ${bus.name}
+(${kids.length})
+</h3>
+
+<p>
+👨‍✈️ المشرف: ${bus.supervisor}
+</p>
+
+<table>
+
+<thead>
+
+<tr>
+<th>رقم الطفل</th>
+<th>الاسم</th>
+<th>الحالة</th>
+</tr>
+
+</thead>
+
+<tbody>
+`;
+
+kids.forEach(child=>{
+
+html += `
+
+<tr>
+
+<td>${child.childId}</td>
+
+<td>${child.name}</td>
+
+<td>
+
+<span class="${
+child.present ? 'present' : 'absent'
+}">
+
+${child.present ? 'حاضر' : 'غائب'}
+
+</span>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+html += `
+</tbody>
+</table>
+
+</div>
+`;
+
+});
+
+document.getElementById(
+"busGroupsContainer"
+).innerHTML = html;
+
+}
+  
 window.resetAttendance =
 async function(){
 
@@ -1160,6 +1268,23 @@ buses = [];
 snapshot.forEach(docu=>{
 
 buses.push({
+docId:docu.id,
+...docu.data()
+});
+
+});
+
+fillBusSelect();
+
+renderBuses();
+
+}
+);
+buses = [];
+
+snapshot.forEach(docu=>{
+
+buses.push({
 
 docId:docu.id,
 ...docu.data()
@@ -1214,7 +1339,8 @@ fillSupervisorSelect();
 renderSupervisors();
 
 renderTable(children);
-
+renderBuses();
+  
 }
 );
 onSnapshot(
