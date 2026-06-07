@@ -249,39 +249,26 @@ style="width:350px;">
 <thead>
 
 <tr>
+<tr>
 
-<th>
-رقم الطفل
-</th>
+<th>رقم الطفل</th>
 
-<th>
-اسم الطفل
-</th>
+<th>اسم الطفل</th>
 
-<th>
-المشرف
-</th>
+<th>المشرف</th>
 
-<th>
+<th>تاريخ البدء</th>
 
-<th>
-تاريخ البدء
-</th>
+<th>تاريخ التفقد</th>
 
-<th>
-تاريخ التفقد
-</th>
+<th>الحالة</th>
 
-<th>
-الحالة
-</th>
+<th>التفقد</th>
 
-<th>
-التفقد
-</th>
+<th>حذف</th>
 
-<th>
-حذف
+</tr>
+
 </th>
 
 </tr>
@@ -842,9 +829,10 @@ html += `
 
 <td>${child.name}</td>
 
+<td>${supervisor ? supervisor.name : "-"}</td>
+
 <td>${child.startDate || "-"}</td>
 
-<td>
 
 <span class="${
 child.present
@@ -1171,44 +1159,6 @@ function(){
 
 let csv =
 "رقم الطفل,الاسم,المشرف,تاريخ البدء,تاريخ التفقد,الحالة\n";
-children.forEach(child=>{
-
-const supervisor =
-supervisors.find(
-s=>s.docId===child.supervisorId
-);
-
-csv +=
-`${child.childId},` +
-`${child.name},` +
-`${supervisor ? supervisor.name : ''},` +
-`${child.startDate || ''},` +
-`${child.present ? 'حاضر' : 'غائب'}\n`;
-
-});
-
-const BOM = "\uFEFF";
-
-const blob =
-new Blob(
-[BOM + csv],
-{
-type:"text/csv;charset=utf-8;"
-}
-);
-
-const link =
-document.createElement("a");
-
-link.href =
-URL.createObjectURL(blob);
-
-link.download =
-"attendance.csv";
-
-document.body.appendChild(link);
-
-link.click();
 
 document.body.removeChild(link);
 
