@@ -1025,9 +1025,6 @@ html += `
 
 });
 
-document.getElementById(
-"busesTable"
-).innerHTML = tableHtml;
 
 document.getElementById(
 "busGroupsContainer"
@@ -1198,7 +1195,6 @@ onSnapshot(
 busesCollection,
 (snapshot)=>{
 
-
 buses = [];
 
 snapshot.forEach(docu=>{
@@ -1213,6 +1209,8 @@ docId:docu.id,
 });
 
 fillBusSelect();
+
+renderBuses();
 
 }
 );
