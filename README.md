@@ -1169,8 +1169,6 @@ attendanceDate:""
 window.exportCSV =
 function(){
 
-window.exportCSV = function(){
-
 let csv =
 "رقم الطفل,الاسم,المشرف,تاريخ البدء,تاريخ التفقد,الحالة\n";
 children.forEach(child=>{
@@ -1263,23 +1261,7 @@ onSnapshot(
 busesCollection,
 (snapshot)=>{
 
-buses = [];
 
-snapshot.forEach(docu=>{
-
-buses.push({
-docId:docu.id,
-...docu.data()
-});
-
-});
-
-fillBusSelect();
-
-renderBuses();
-
-}
-);
 buses = [];
 
 snapshot.forEach(docu=>{
