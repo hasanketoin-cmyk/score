@@ -940,6 +940,7 @@ html += `
 <th>تاريخ البدء</th>
 <th>الحالة</th>
 <th>التفقد</th>
+<th>حذف</th>
 </tr>
 
 </thead>
@@ -991,14 +992,15 @@ child.present
 
 <td>
 
-<input
-type="checkbox"
-class="checkbox"
-${child.present ? 'checked' : ''}
-onchange="toggleAttendance('${child.docId}')">
+<button
+class="delete"
+onclick="deleteChild('${child.docId}')">
+
+حذف
+
+</button>
 
 </td>
-
 ${
 child.present
 ?
