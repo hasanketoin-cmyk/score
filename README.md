@@ -1175,9 +1175,24 @@ fillBusSelect();
 );
 function fillBusSelect(){
 
-onSnapshot(
-supervisorsCollection,
-(snapshot)=>{
+let html =
+'<option value="">اختر خط الباص</option>';
+
+buses.forEach(bus=>{
+
+html += `
+<option value="${bus.docId}">
+${bus.name}
+</option>
+`;
+
+});
+
+document.getElementById(
+"childBus"
+).innerHTML = html;
+
+}
 
 supervisors = [];
 
