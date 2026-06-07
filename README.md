@@ -1193,6 +1193,31 @@ document.getElementById(
 
 }
 onSnapshot(
+supervisorsCollection,
+(snapshot)=>{
+
+supervisors = [];
+
+snapshot.forEach(docu=>{
+
+supervisors.push({
+
+docId:docu.id,
+...docu.data()
+
+});
+
+});
+
+fillSupervisorSelect();
+
+renderSupervisors();
+
+renderTable(children);
+
+}
+);
+onSnapshot(
 childrenCollection,
 (snapshot)=>{
 
@@ -1209,9 +1234,7 @@ docId:docu.id,
 
 });
 
-renderTable(
-children
-);
+renderTable(children);
 
 }
 );
