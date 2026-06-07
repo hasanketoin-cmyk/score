@@ -194,6 +194,13 @@ id="childName"
 placeholder="اسم الطفل">
 
 <select id="childSupervisor">
+
+<option value="">
+اختر المشرف
+</option>
+
+</select>
+
 <select id="childBus">
 
 <option value="">
@@ -1166,6 +1173,7 @@ fillBusSelect();
 
 }
 );
+function fillBusSelect(){
 
 onSnapshot(
 supervisorsCollection,
@@ -1185,7 +1193,6 @@ docId:docu.id,
 });
 
 fillSupervisorSelect();
-function fillBusSelect(){
 
 let html =
 '<option value="">اختر خط الباص</option>';
