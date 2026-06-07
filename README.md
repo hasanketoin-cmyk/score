@@ -973,7 +973,6 @@ ${child.name}
 ${child.startDate || "-"}
 </td>
 
-<td>
 
 <td>
 
@@ -1192,52 +1191,6 @@ document.getElementById(
 "childBus"
 ).innerHTML = html;
 
-}
-
-supervisors = [];
-
-snapshot.forEach(docu=>{
-
-supervisors.push({
-
-docId:docu.id,
-...docu.data()
-
-});
-
-});
-
-fillSupervisorSelect();
-
-let html =
-'<option value="">اختر خط الباص</option>';
-
-buses.forEach(bus=>{
-
-html += `
-
-<option value="${bus.docId}">
-${bus.name}
-</option>
-
-`;
-
-});
-
-document
-.getElementById(
-"childBus"
-)
-.innerHTML = html;
-
-}
-
-renderSupervisors();
-
-renderTable(children);
-
-}
-);
 
 onSnapshot(
 childrenCollection,
