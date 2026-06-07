@@ -848,7 +848,6 @@ onclick="deleteChild('${child.docId}')">
 </tr>
 
 `;
-
 });
 
 document
