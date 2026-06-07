@@ -796,19 +796,7 @@ ${child.name}
 </td>
 
 <td>
-${supervisor
-?
-supervisor.name
-:
-"-"}
-</td>
-
-<td>
 ${child.startDate || "-"}
-</td>
-
-<td>
-${child.attendanceDate || "-"}
 </td>
 
 <td>
