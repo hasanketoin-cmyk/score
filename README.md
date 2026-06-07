@@ -980,10 +980,6 @@ child.present
 
 <td>
 
-<button
-class="delete"
-onclick="deleteChild('${child.docId}')">
-
 حذف
 
 </button>
