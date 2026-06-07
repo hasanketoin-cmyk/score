@@ -413,39 +413,7 @@ db,
 
 let children = [];
 let supervisors = [];
-const ADMIN_PASSWORD = "199412";
 
-let adminUnlocked = false;
-
-function requireAdmin(){
-
-if(adminUnlocked)
-return true;
-
-const password =
-prompt(
-"أدخل رمز الإدارة"
-);
-
-if(password !== ADMIN_PASSWORD){
-
-alert(
-"رمز الإدارة غير صحيح"
-);
-
-return false;
-
-}
-
-adminUnlocked = true;
-
-alert(
-"تم فتح الإدارة"
-);
-
-return true;
-
-}
 async function createDefaultGroups(){
 
 const snapshot =
@@ -456,11 +424,13 @@ supervisorsCollection
 if(snapshot.empty){
 
 const groups = [
+
 "المجموعة الأولى",
 "المجموعة الثانية",
 "المجموعة الثالثة",
 "المجموعة الرابعة",
 "المجموعة الخامسة"
+
 ];
 
 for(const group of groups){
@@ -477,20 +447,12 @@ name:group
 }
 
 }
-}
 
 createDefaultGroups();
 
 window.addSupervisor =
 async function(){
 
-
-if(
-!confirm(
-"حذف الطفل؟"
-)
-)
-return;
 const name =
 document
 .getElementById(
@@ -527,12 +489,6 @@ document
 window.deleteSupervisor =
 async function(docId){
 
-if(
-!confirm(
-"حذف الطفل؟"
-)
-)
-return;
 if(
 !confirm(
 "حذف المشرف؟"
@@ -671,9 +627,8 @@ c => Number(c.childId || 0)
 return maxId + 1;
 
 }
- window.addChild =
+  window.addChild =
 async function(){
-
 
 const name =
 document
@@ -741,13 +696,6 @@ if(
 )
 return;
 
-if(
-!confirm(
-"حذف الطفل؟"
-)
-)
-return;
-
 await deleteDoc(
 doc(
 db,
@@ -771,21 +719,16 @@ await updateDoc(
 doc(
 db,
 "children",
-docId
+child.docId
 ),
 {
-present: !child.present,
-
-attendanceDate:
-!child.present
-?
-new Date().toLocaleDateString('en-CA')
-:
-""
+present:true,
+attendanceDate:new Date().toLocaleDateString('en-CA')
 }
 );
 
 };
+
 window.searchChild =
 function(){
 
