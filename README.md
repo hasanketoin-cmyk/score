@@ -959,24 +959,23 @@ ${child.startDate || "-"}
 
 <td>
 
-<span
-class="${
-child.present
-?
-'present'
-:
-'absent'
-}">
+<input
+type="checkbox"
+class="checkbox"
+${child.present ? 'checked' : ''}
+onchange="toggleAttendance('${child.docId}')">
 
-${
-child.present
-?
-'حاضر'
-:
-'غائب'
-}
+</td>
 
-</span>
+<td>
+
+<button
+class="delete"
+onclick="deleteChild('${child.docId}')">
+
+حذف
+
+</button>
 
 </td>
 
