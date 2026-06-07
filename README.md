@@ -801,8 +801,7 @@ ${child.startDate || "-"}
 
 <td>
 
-<span
-class="${
+<span class="${
 child.present
 ?
 'present'
