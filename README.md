@@ -785,7 +785,7 @@ supervisors.find(
 s =>
 s.docId ===
 child.supervisorId
-kids.forEach(child=>{
+
 
 html += `
 
