@@ -1039,7 +1039,6 @@ attendanceDate:""
 
 };
 
-};
 
 window.exportCSV =
 function(){
