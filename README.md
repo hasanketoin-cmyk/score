@@ -1191,7 +1191,7 @@ document.getElementById(
 "childBus"
 ).innerHTML = html;
 
-
+}
 onSnapshot(
 childrenCollection,
 (snapshot)=>{
