@@ -194,9 +194,10 @@ id="childName"
 placeholder="اسم الطفل">
 
 <select id="childSupervisor">
+<select id="childBus">
 
 <option value="">
-اختر المشرف
+اختر خط الباص
 </option>
 
 </select>
