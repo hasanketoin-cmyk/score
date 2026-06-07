@@ -415,9 +415,15 @@ collection(
 db,
 "supervisors"
 );
+const busesCollection =
+collection(
+db,
+"buses"
+);
 
 let children = [];
 let supervisors = [];
+let buses = [];
 
 async function createDefaultGroups(){
 
@@ -650,6 +656,12 @@ document
 "childSupervisor"
 )
 .value;
+const busId =
+document
+.getElementById(
+"childBus"
+)
+.value;
 
 const startDate =
 document
@@ -677,8 +689,10 @@ childrenCollection,
 name:name,
 childId:getNextChildId(),
 supervisorId:supervisorId,
+busId:busId,
 startDate:startDate,
-present:false
+present:false,
+busAttendance:false
 }
 );
 
@@ -1131,6 +1145,27 @@ link.download =
 link.click();
 
 };
+onSnapshot(
+busesCollection,
+(snapshot)=>{
+
+buses = [];
+
+snapshot.forEach(docu=>{
+
+buses.push({
+
+docId:docu.id,
+...docu.data()
+
+});
+
+});
+
+fillBusSelect();
+
+}
+);
 
 onSnapshot(
 supervisorsCollection,
@@ -1150,6 +1185,30 @@ docId:docu.id,
 });
 
 fillSupervisorSelect();
+function fillBusSelect(){
+
+let html =
+'<option value="">اختر خط الباص</option>';
+
+buses.forEach(bus=>{
+
+html += `
+
+<option value="${bus.docId}">
+${bus.name}
+</option>
+
+`;
+
+});
+
+document
+.getElementById(
+"childBus"
+)
+.innerHTML = html;
+
+}
 
 renderSupervisors();
 
