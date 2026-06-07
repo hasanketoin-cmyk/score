@@ -782,9 +782,8 @@ data.forEach(child=>{
 
 const supervisor =
 supervisors.find(
-s =>
-s.docId ===
-child.supervisorId
+s => s.docId === child.supervisorId
+);
 
 html += `
 
@@ -954,11 +953,27 @@ ${child.startDate || "-"}
 
 <td>
 
-<input
-type="checkbox"
-class="checkbox"
-${child.present ? 'checked' : ''}
-onchange="toggleAttendance('${child.docId}')">
+<td>
+
+<span class="${
+child.present ? 'present' : 'absent'
+}">
+
+${child.present ? 'حاضر' : 'غائب'}
+
+</span>
+
+</td>
+
+<td>
+
+<button
+class="${child.present ? 'present' : 'absent'}"
+onclick="toggleAttendance('${child.docId}')">
+
+${child.present ? '🟢 حاضر' : '🔴 غائب'}
+
+</button>
 
 </td>
 
@@ -971,25 +986,6 @@ onclick="deleteChild('${child.docId}')">
 حذف
 
 </button>
-
-</td>
-
-<td>
-
-حذف
-
-</button>
-
-</td>
-${
-child.present
-?
-'حاضر'
-:
-'غائب'
-}
-
-</span>
 
 </td>
 
