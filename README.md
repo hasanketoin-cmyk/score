@@ -936,13 +936,10 @@ html += `
 <tr>
 
 <th>رقم الطفل</th>
-
 <th>الاسم</th>
-
 <th>تاريخ البدء</th>
-
 <th>الحالة</th>
-
+<th>التفقد</th>
 </tr>
 
 </thead>
@@ -979,6 +976,28 @@ child.present
 :
 'absent'
 }">
+
+${
+child.present
+?
+'حاضر'
+:
+'غائب'
+}
+
+</span>
+
+</td>
+
+<td>
+
+<input
+type="checkbox"
+class="checkbox"
+${child.present ? 'checked' : ''}
+onchange="toggleAttendance('${child.docId}')">
+
+</td>
 
 ${
 child.present
