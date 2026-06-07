@@ -446,16 +446,21 @@ alert(
 return true;
 
 }
+async function createDefaultGroups(){
+
+const snapshot =
+await getDocs(
+supervisorsCollection
+);
+
 if(snapshot.empty){
 
 const groups = [
-
 "المجموعة الأولى",
 "المجموعة الثانية",
 "المجموعة الثالثة",
 "المجموعة الرابعة",
 "المجموعة الخامسة"
-
 ];
 
 for(const group of groups){
@@ -471,6 +476,7 @@ name:group
 
 }
 
+}
 }
 
 createDefaultGroups();
