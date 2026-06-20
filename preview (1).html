@@ -2743,15 +2743,8 @@ return;
 
 }
 
-await addDoc(
-academyCollection,
-{
-name:name,
-startDate:startDate,
 sessions:sessions,
-fees:fees
-}
-);
+
 
 };
 window.addPayment = async function(docId){
@@ -2847,6 +2840,55 @@ link.click();
 document.body.removeChild(link);
 
 };
+window.renewAcademy =
+async function(
+docId,
+sessions
+){
+
+const today =
+new Date();
+
+today.setDate(
+today.getDate()+28
+);
+
+const expiryDate =
+today.toISOString().split("T")[0];
+
+const player =
+academyPlayers.find(
+p=>p.docId===docId
+);
+
+await updateDoc(
+doc(
+db,
+"academyPlayers",
+docId
+),
+{
+startDate:
+new Date()
+.toISOString()
+.split("T")[0],
+
+expiryDate:expiryDate,
+
+packageSessions:sessions,
+
+usedSessions:0,
+
+extraSessions:0,
+
+paid:0,
+
+remaining:
+Number(player.fees || 0)
+}
+);
+
+};
 window.deleteAcademyPlayer =
 async function(docId){
 
@@ -2934,11 +2976,61 @@ table.innerHTML = html;
 }
 
 }
+function getAcademyStatus(player){
+
+const remainingSessions =
+
+(
+Number(player.packageSessions || 0)
++
+Number(player.extraSessions || 0)
+)
+-
+Number(player.usedSessions || 0);
+
+if(remainingSessions <= 0){
+
+return{
+text:"منتهي",
+className:"expired"
+};
+
+}
+
+if(remainingSessions === 1){
+
+return{
+text:"جلسة أخيرة",
+className:"warning"
+};
+
+}
+
+return{
+text:"فعال",
+className:"activeSub"
+};
+
+}
+
 function renderAcademy(){
 
 let html = "";
 
 academyPlayers.forEach(player=>{
+
+const subscription =
+getAcademyStatus(player);
+
+const remainingSessions =
+
+(
+Number(player.packageSessions || 0)
++
+Number(player.extraSessions || 0)
+)
+-
+Number(player.usedSessions || 0);
 
 html += `
 
@@ -2948,9 +3040,49 @@ html += `
 
 <td>${player.startDate || "-"}</td>
 
-<td>${player.sessions}</td>
+<td>${player.expiryDate || "-"}</td>
 
-<td>${player.fees}</td>
+<td>
+
+<span class="${subscription.className}">
+
+${subscription.text}
+
+</span>
+
+</td>
+
+<td>
+
+${remainingSessions}
+
+</td>
+
+<td>
+
+${player.fees || 0}
+
+</td>
+
+<td>
+
+<button
+class="export"
+onclick="renewAcademy('${player.docId}',12)">
+
+12 جلسة
+
+</button>
+
+<button
+class="reset"
+onclick="renewAcademy('${player.docId}',8)">
+
+8 جلسات
+
+</button>
+
+</td>
 
 <td>
 
@@ -2970,10 +3102,11 @@ onclick="deleteAcademyPlayer('${player.docId}')">
 
 });
 
-const table =
 document.getElementById(
 "academyTable"
-);
+).innerHTML = html;
+
+}
 
 if(table){
 
