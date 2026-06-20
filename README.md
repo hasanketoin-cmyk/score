@@ -11,8 +11,7 @@ onclick="exportBusAttendance()">
 </button>
 
 <div id="busLinesContainer"></div>
-</body>
-</html>
+
 <script type="module">
 
 import { initializeApp }
@@ -354,3 +353,5 @@ renderBusLines();
 );
 
 </script>
+</body>
+</html>
