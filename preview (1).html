@@ -592,11 +592,11 @@ margin-top:15px;
 <select id="sessionPackage">
 
 <option value="12">
-12 جلسة
+22 جلسة
 </option>
 
 <option value="8">
-8 جلسات
+12 جلسات
 </option>
 
 </select>
@@ -898,11 +898,11 @@ id="academyStartDate">
 <select id="academySessions">
 
 <option value="12">
-12 جلسة
+22 جلسة
 </option>
 
 <option value="8">
-8 جلسات
+12 جلسات
 </option>
 
 </select>
@@ -2479,7 +2479,7 @@ onclick="addPayment('${child.docId}')">
 class="export"
 onclick="renewSubscription('${child.docId}',12)">
 
-12 جلسة
+22 جلسة
 
 </button>
 
@@ -2487,7 +2487,7 @@ onclick="renewSubscription('${child.docId}',12)">
 class="reset"
 onclick="renewSubscription('${child.docId}',8)">
 
-8 جلسات
+12 جلسات
 
 </button>
 
@@ -2743,52 +2743,36 @@ return;
 
 }
 
-sessions:sessions,
+const endDate =
+new Date(startDate);
 
-
-};
-window.addPayment = async function(docId){
-
-const child =
-children.find(
-c => c.docId === docId
+endDate.setDate(
+endDate.getDate()+28
 );
 
-if(!child)
-return;
+const expiryDate =
+endDate.toISOString()
+.split("T")[0];
 
-const amount =
-Number(
-prompt(
-"أدخل قيمة الدفعة"
-)
-);
-
-if(
-!amount ||
-amount <= 0
-)
-return;
-
-const newPaid =
-Number(child.paid || 0)
-+
-amount;
-
-const newRemaining =
-Number(child.fees || 0)
--
-newPaid;
-
-await updateDoc(
-doc(
-db,
-"children",
-docId
-),
+await addDoc(
+academyCollection,
 {
-paid:newPaid,
-remaining:newRemaining
+name:name,
+
+startDate:startDate,
+expiryDate:expiryDate,
+
+packageSessions:sessions,
+
+usedSessions:0,
+
+extraSessions:0,
+
+fees:fees,
+
+paid:0,
+
+remaining:fees
 }
 );
 
@@ -3070,7 +3054,7 @@ ${player.fees || 0}
 class="export"
 onclick="renewAcademy('${player.docId}',12)">
 
-12 جلسة
+22 جلسة
 
 </button>
 
@@ -3078,7 +3062,7 @@ onclick="renewAcademy('${player.docId}',12)">
 class="reset"
 onclick="renewAcademy('${player.docId}',8)">
 
-8 جلسات
+12 جلسات
 
 </button>
 
@@ -3105,14 +3089,6 @@ onclick="deleteAcademyPlayer('${player.docId}')">
 document.getElementById(
 "academyTable"
 ).innerHTML = html;
-
-}
-
-if(table){
-
-table.innerHTML = html;
-
-}
 
 }  
 onSnapshot(
