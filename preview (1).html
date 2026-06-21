@@ -14,7 +14,15 @@ border-radius:20px;
 font-size:12px;
 font-weight:bold;
 }
-
+.orangeSub{
+background:#f59e0b;
+color:white;
+padding:6px 12px;
+border-radius:20px;
+font-size:12px;
+font-weight:bold;
+}
+  
 .warning{
 background:#f59e0b;
 color:white;
@@ -538,6 +546,19 @@ margin-top:15px;
 <div class="number" id="totalCount">0</div>
 <div class="label">الإجمالي</div>
 </div>
+  <div class="stat-card">
+<div class="number" id="count12">0</div>
+<div class="label">
+اشتراك 12 جلسة
+</div>
+</div>
+
+<div class="stat-card">
+<div class="number" id="count22">0</div>
+<div class="label">
+اشتراك 22 جلسة
+</div>
+</div>
 </div>
 </div>
 
@@ -591,12 +612,14 @@ margin-top:15px;
 <input type="date" id="startDate">
 <select id="sessionPackage">
 
-<option value="12">
+<select id="sessionPackage">
+
+<option value="22">
 22 جلسة
 </option>
 
-<option value="8">
-12 جلسات
+<option value="12">
+12 جلسة
 </option>
 
 </select>
@@ -897,12 +920,14 @@ id="academyStartDate">
 
 <select id="academySessions">
 
-<option value="12">
+<select id="academySessions">
+
+<option value="22">
 22 جلسة
 </option>
 
-<option value="8">
-12 جلسات
+<option value="12">
+12 جلسة
 </option>
 
 </select>
@@ -2010,7 +2035,7 @@ renderSupervisors();
 renderFinance();
 
 }
-  function getSubscriptionStatus(child){
+function getSubscriptionStatus(child){
 
 const remainingSessions =
 
@@ -2024,7 +2049,7 @@ Number(child.usedSessions || 0);
 
 if(remainingSessions <= 0){
 
-return {
+return{
 text:"منتهي",
 className:"expired"
 };
@@ -2033,20 +2058,38 @@ className:"expired"
 
 if(remainingSessions === 1){
 
-return {
+return{
 text:"جلسة أخيرة",
 className:"warning"
 };
 
 }
 
-return {
+if(Number(child.packageSessions) === 12){
+
+return{
+text:"12 جلسة",
+className:"orangeSub"
+};
+
+}
+
+if(Number(child.packageSessions) === 22){
+
+return{
+text:"22 جلسة",
+className:"activeSub"
+};
+
+}
+
+return{
 text:"فعال",
 className:"activeSub"
 };
 
 }
-  function updateStats(){
+function updateStats(){
 
 const present =
 children.filter(
@@ -2073,6 +2116,32 @@ document
 "totalCount"
 )
 .innerText = children.length;
+
+const count12 =
+children.filter(
+c=>Number(c.packageSessions)===12
+).length;
+
+const count22 =
+children.filter(
+c=>Number(c.packageSessions)===22
+).length;
+
+if(document.getElementById("count12")){
+
+document.getElementById(
+"count12"
+).innerText = count12;
+
+}
+
+if(document.getElementById("count22")){
+
+document.getElementById(
+"count22"
+).innerText = count22;
+
+}
 
 }
 
