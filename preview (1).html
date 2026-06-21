@@ -613,17 +613,34 @@ margin-top:15px;
 <input type="date" id="startDate">
 <select id="sessionPackage">
 
-<select id="sessionPackage">
+<input
+type="hidden"
+id="sessionPackage"
+value="22">
 
-<option value="22" selected>
-🟢 اشتراك 22 جلسة
-</option>
+<div style="display:flex;gap:15px">
 
-<option value="12">
-🟠 اشتراك 12 جلسة
-</option>
+<button
+type="button"
+class="export packageBtn"
+onclick="selectPackage(22,this)"
+style="opacity:1">
 
-</select>
+🟢 22 جلسة
+
+</button>
+
+<button
+type="button"
+class="reset packageBtn"
+onclick="selectPackage(12,this)"
+style="opacity:.5">
+
+🟠 12 جلسة
+
+</button>
+
+</div>
 <input
 type="number"
 id="childFees"
@@ -1524,6 +1541,27 @@ db,
 docId
 )
 );
+
+};
+window.selectPackage =
+function(
+sessions,
+btn
+){
+
+document.getElementById(
+"sessionPackage"
+).value = sessions;
+
+document
+.querySelectorAll(
+".packageBtn"
+)
+.forEach(
+b=>b.style.opacity="0.5"
+);
+
+btn.style.opacity="1";
 
 };
 window.addChild = async function(){
