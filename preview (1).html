@@ -560,6 +560,61 @@ margin-top:15px;
 اشتراك 22 جلسة
 </div>
 </div>
+<div class="stat-card">
+<div class="number" id="childrenCount">0</div>
+<div class="label">
+عدد الأطفال
+</div>
+</div>
+
+<div class="stat-card">
+<div class="number" id="expiredCount">0</div>
+<div class="label">
+الاشتراكات المنتهية
+</div>
+</div>
+
+<div class="stat-card">
+<div class="number" id="academyCount">0</div>
+<div class="label">
+لاعبي الأكاديمية
+</div>
+</div>
+
+<div class="stat-card">
+<div class="number" id="academyExpiredCount">0</div>
+<div class="label">
+منتهي الأكاديمية
+</div>
+</div>
+
+<div class="stat-card">
+<div class="number" id="privateCount">0</div>
+<div class="label">
+البرايفت
+</div>
+</div>
+
+<div class="stat-card">
+<div class="number" id="dashboardTotalFees">0</div>
+<div class="label">
+إجمالي الرسوم
+</div>
+</div>
+
+<div class="stat-card">
+<div class="number" id="dashboardPaid">0</div>
+<div class="label">
+إجمالي المقبوض
+</div>
+</div>
+
+<div class="stat-card">
+<div class="number" id="dashboardRemaining">0</div>
+<div class="label">
+إجمالي المتبقي
+</div>
+</div>
 </div>
 </div>
 
@@ -2191,7 +2246,96 @@ document.getElementById(
 ).innerText = count22;
 
 }
+document.getElementById(
+"childrenCount"
+).innerText =
+children.length;
 
+const expiredCount =
+children.filter(c=>
+
+(
+Number(c.packageSessions || 0)
++
+Number(c.extraSessions || 0)
+)
+-
+Number(c.usedSessions || 0)
+
+<=0
+
+).length;
+
+document.getElementById(
+"expiredCount"
+).innerText =
+expiredCount;
+
+document.getElementById(
+"academyCount"
+).innerText =
+academyPlayers.length;
+
+const academyExpiredCount =
+academyPlayers.filter(p=>
+
+(
+Number(p.packageSessions || 0)
++
+Number(p.extraSessions || 0)
+)
+-
+Number(p.usedSessions || 0)
+
+<=0
+
+).length;
+
+document.getElementById(
+"academyExpiredCount"
+).innerText =
+academyExpiredCount;
+
+document.getElementById(
+"privateCount"
+).innerText =
+privatePlayers.length;
+
+const totalFees =
+children.reduce(
+(sum,c)=>
+sum + Number(c.fees || 0),
+0
+);
+
+const totalPaid =
+children.reduce(
+(sum,c)=>
+sum + Number(c.paid || 0),
+0
+);
+
+const totalRemaining =
+children.reduce(
+(sum,c)=>
+sum + Number(c.remaining || 0),
+0
+);
+
+document.getElementById(
+"dashboardTotalFees"
+).innerText =
+totalFees;
+
+document.getElementById(
+"dashboardPaid"
+).innerText =
+totalPaid;
+
+document.getElementById(
+"dashboardRemaining"
+).innerText =
+totalRemaining;
 }
 
 function renderGroups(){
@@ -3263,6 +3407,8 @@ docId:docu.id,
 
 renderPrivate();
 
+updateStats();
+
 }
 );
 onSnapshot(
@@ -3281,6 +3427,8 @@ docId:docu.id,
 });
 
 renderAcademy();
+
+updateStats();
 
 }
 );
