@@ -1555,23 +1555,20 @@ docId
 );
 
 };
-window.selectPackage =
-function(
-sessions,
-btn
-){
+window.selectPackage = function(sessions, btn){
 
-document.getElementById(
-"sessionPackage"
-).value = sessions;
+document.getElementById("sessionPackage").value = sessions;
 
-document
-.querySelectorAll(
-".packageBtn"
-)
-.forEach(
-b=>b.style.opacity="0.5"
-);
+// إذا كنا في الأكاديمية أيضاً
+const academyInput =
+document.getElementById("academySessions");
+
+if(academyInput){
+academyInput.value = sessions;
+}
+
+document.querySelectorAll(".packageBtn")
+.forEach(b=>b.style.opacity="0.5");
 
 btn.style.opacity="1";
 
@@ -1592,6 +1589,7 @@ document.getElementById(
 "sessionPackage"
 ).value
 );
+console.log("package =", sessionPackage);
 const endDate =
 new Date(startDate);
 
